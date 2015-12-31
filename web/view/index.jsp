@@ -58,11 +58,11 @@
             <%--<div id="banner">
                 <%@include file="includes/index/banner.jsp" %>
             </div>--%>
-            <div id="breadcrumb">
-                <%@include file="includes/index/breadcrumb.jsp" %>
-            </div>
             <div id="notice">
                 <%@include file="includes/index/notice.jsp" %>
+            </div>
+            <div id="breadcrumb">
+                <%@include file="includes/index/breadcrumb.jsp" %>
             </div>
             <div id="content">
                 <div class="container">

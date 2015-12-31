@@ -9,7 +9,7 @@
     </div>
 </c:if>
 <c:if test="${f:size(PAGINATION.displayList)!=0}">
-    <table class="table table-condensed table-hover table-valign-midle table-grid-view table-align-center">
+    <table class="table table-condensed table-hover table-valign-midle table-grid-view table-align-center table-bordered">
         <thead>
             <tr controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.ORDER_DATA}/'/>">
                 <th class="th-id" column="id">ID <span class="${PAGINATION.orderColmn=='id'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>

@@ -9,7 +9,7 @@
     </div>
 </c:if>
 <c:if test="${f:size(PAGINATION.displayList)!=0}">
-    <table class="table table-condensed table-hover table-valign-midle table-grid-view table-align-center">
+    <table class="table table-condensed table-hover table-valign-midle table-grid-view table-align-center table-bordered">
         <thead>
             <tr controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.ORDER_DATA}/'/>">
                 <th class="th-checkbox external"><input class="select-all" type="checkbox" /></th>
