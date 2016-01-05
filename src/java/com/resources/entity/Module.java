@@ -11,7 +11,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import org.hibernate.annotations.Type;
 
 @Entity
 @Table(name = "[Module]")
@@ -110,7 +109,7 @@ public class Module implements java.io.Serializable {
         this.isDeleted = isDeleted;
     }
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "module")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "module")
     public List<Module> getModules() {
         return this.modules;
     }

@@ -8,6 +8,8 @@ public class ProvincialAgencyPagination extends DefaultAdminPagination {
         setViewTitle("Danh sách đại lý");
         setOrderColmn("id");
         setChildrenController("/Customer");
+        setInsertViewName("/customer_provincial_agencies_insert_modal");
+        setEditViewName("/customer_provincial_agencies_edit_modal");
         setViewName(viewName);
         this.grandController=grandController;
     }

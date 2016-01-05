@@ -36,7 +36,9 @@
                         <div class="btn-group btn-group-sm">
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i></button>
                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-action" role="menu">
-                                <li><a controller="/Admin/Customer/ProvincialAgencies/Block/${provincialAgency.id}/${!provincialAgency.isShow}">${provincialAgency.isShow?"Ẩn":"Hiện"}</a></li>
+                                <li><a class="btn-open-modal" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_EDIT}/${provincialAgency.id}">Sửa</a></li>
+                                <li><a controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}/Block/${provincialAgency.id}/${!provincialAgency.isShow}">${provincialAgency.isShow?"Ẩn":"Hiện"}</a></li>
+                                <li><a controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${provincialAgency.id}">Xóa</a></li>
                             </ul>
                         </div>
                     </td>

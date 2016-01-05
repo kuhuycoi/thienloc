@@ -6,6 +6,8 @@ import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
@@ -43,7 +45,8 @@ public class ProvincialAgencies implements java.io.Serializable {
     }
 
     @Id
-    @Column(name = "ID")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "ID", insertable = false, updatable = false)
     public int getId() {
         return this.id;
     }
@@ -79,7 +82,7 @@ public class ProvincialAgencies implements java.io.Serializable {
         this.userName = userName;
     }
 
-    @Column(name = "IsDeleted")
+    @Column(name = "IsDeleted",insertable = false)
     public Boolean getIsDeleted() {
         return this.isDeleted;
     }
@@ -98,7 +101,7 @@ public class ProvincialAgencies implements java.io.Serializable {
     }
 
     @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "DateCreated", length = 23)
+    @Column(name = "DateCreated", length = 23,insertable = false,updatable = false)
     public Date getDateCreated() {
         return this.dateCreated;
     }

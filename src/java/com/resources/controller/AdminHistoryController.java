@@ -12,6 +12,7 @@ import com.resources.facade.RankCustomersFacade;
 import com.resources.pagination.admin.HistoryPagination;
 import com.resources.pagination.admin.DefaultAdminPagination;
 import com.resources.pagination.admin.MessagePagination;
+import com.resources.pagination.admin.ReportPagination;
 import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
@@ -19,6 +20,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -93,11 +95,38 @@ public class AdminHistoryController {
         return customerRankCustomerView(customerRankCustomerPagination, session);
     }
 
+    @RequestMapping(value = "/CustomerRankCustomer/ChangeAgency/{agencyId}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView changeAgencyView(@PathVariable("agencyId") Integer agencyId, HttpSession session) {
+        HistoryPagination customerRankCustomerPagination = new HistoryPagination("Lịch sử nạp PV", "/CustomerRankCustomer", "/history_customer_rank_customer");
+        customerRankCustomerPagination.setAgencyId(agencyId == -1 ? null : agencyId);
+        session.setAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION", customerRankCustomerPagination);
+        return customerRankCustomerView(customerRankCustomerPagination, session);
+    }
+
+    @RequestMapping(value = "/CustomerRankCustomer/ChangeDay/{type}/{day}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-mm-dd") Date day, HttpSession session) {
+        HistoryPagination customerRankCustomerPagination = new HistoryPagination("Lịch sử nạp PV", "/CustomerRankCustomer", "/history_customer_rank_customer");
+        day = "-1".equals(day) ? null : day;
+        if (type == 0) {
+            customerRankCustomerPagination.setStartDate(day);
+        } else {
+            customerRankCustomerPagination.setEndDate(day);
+        }
+        return customerRankCustomerView(customerRankCustomerPagination, session);
+    }
+
     private ModelAndView customerRankCustomerView(HistoryPagination customerRankCustomerPagination, HttpSession session) {
         if (customerRankCustomerPagination == null) {
             customerRankCustomerPagination = new HistoryPagination("Lịch sử nạp PV", "/CustomerRankCustomer", "/history_customer_rank_customer");
         }
-        new CustomerRankCustomerFacade().pageData(customerRankCustomerPagination);
+        Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        Integer agencyId = 0;
+        if (role == 2) {
+            agencyId = new AdminFacade().getAdminAgencyByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        }
+        new CustomerRankCustomerFacade().pageData(customerRankCustomerPagination, role, agencyId);
         session.setAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION", customerRankCustomerPagination);
         return new ModelAndView(DefaultAdminPagination.AJAX_FOLDER + customerRankCustomerPagination.getViewName());
     }

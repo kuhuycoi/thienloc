@@ -56,21 +56,22 @@
                     <option value="4/-1">Hoa hồng trực tiếp</option>           
                     <option value="1/-1">Hoa hồng nén tầng</option>           
                     <option value="13/0">Hoa hồng cân nhánh</option>           
-                    <option value="13/2">Hoa hồng Silver</option>          
+                    <%--<option value="13/2">Hoa hồng Silver</option>          
                     <option value="13/3">Hoa hồng Gold</option>            
                     <option value="13/4">Hoa hồng Shaphia</option>           
                     <option value="13/5">Hoa hồng Ruby</option>           
                     <option value="13/6">Hoa hồng Diamond</option>           
                     <option value="13/7">Hoa hồng Crown</option>          
-                    <option value="13/8">Hoa hồng Crown VIP</option>     
-                    <option value="15/4">Hoa hồng gói đồng</option>     
-                    <option value="15/5">Hoa hồng gói bạc</option>     
-                    <option value="15/6">Hoa hồng gói vàng</option>     
-                    <option value="15/7">Hoa hồng gói kim cương</option>       
+                    <option value="13/8">Hoa hồng Crown VIP</option> --%>    
+                    <option value="15/4">Hoa hồng phần trăm gói đồng</option>     
+                    <option value="15/5">Hoa hồng phần trăm gói bạc</option>     
+                    <option value="15/6">Hoa hồng phần trăm gói vàng</option>     
+                    <option value="15/7">Hoa hồng phần trăm gói kim cương</option>       
                     <option value="14/-1">Hoa hồng lãnh đạo</option>       
                     <option value="6/-1">Lương hệ thống</option>     
                     <option value="1/-1">Hoa hồng hoàn vốn</option>  
                     <option value="3/-1">Hoa hồng lên cấp</option>  
+                     <option value="2/-1">Hoa hồng phần trăm lãnh đạo</option> 
                 </select>
             </li>
             <li>

@@ -15,8 +15,8 @@
             <tr controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.ORDER_DATA}/'/>">
                 <th class="th-checkbox external"><input class="select-all" type="checkbox" /></th>
                 <th class="th-id" column="id">ID <span class="${PAGINATION.orderColmn=='id'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="col-md-4" column="lastName">Tên NPP <span class="${PAGINATION.orderColmn=='lastName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="col-md-2" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-4 text-left" column="lastName">Tên NPP <span class="${PAGINATION.orderColmn=='lastName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-2 text-left" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="parentName">Người chỉ định <span class="${PAGINATION.orderColmn=='parentName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                     <c:if test="${ROLE==3||ROLE==4}">                
                     <th class="col-md-2" column="rankCustomerName">Gói PV <span class="${PAGINATION.orderColmn=='rankCustomerName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
@@ -57,8 +57,8 @@
                 </c:if>
             </td>
             <td>${cus.id}</td>
-            <td>${cus.firstName} ${cus.lastName}</td>
-            <td class="bold-blue">${cus.userName}</td>
+            <td class="text-left">${cus.firstName} ${cus.lastName}</td>
+            <td class="bold-blue text-left">${cus.userName}</td>
             <td>${cus.parentName}</td>
             <c:if test="${ROLE==3||ROLE==4}"> 
                 <td class="bold-red">${cus.rankCustomerName}</td>               

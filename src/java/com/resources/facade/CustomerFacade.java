@@ -138,7 +138,6 @@ public class CustomerFacade extends AbstractFacade {
                 Criteria cr = session.createCriteria(Customer.class, "c");
                 cr.createAlias("c.provincialAgencies", "provincialAgencies");
                 cr.add(Restrictions.and(Restrictions.eq("isDelete", false), Restrictions.eq("isActive", true), Restrictions.not(Restrictions.eq("id", 1))));
-                    System.out.println("Agency: "+customerPagination.getAgencyId());
                 if (roleId == 2 && agencyId != 0) {
                     cr.add(Restrictions.eq("provincialAgencies.id", agencyId));
                 } else if (customerPagination.getAgencyId() != null) {

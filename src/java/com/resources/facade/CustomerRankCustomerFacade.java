@@ -14,6 +14,7 @@ import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -37,17 +38,30 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
         super(CustomerRankCustomer.class);
     }
 
-    public void pageData(HistoryPagination historyPagination) {
+    public void pageData(HistoryPagination historyPagination,Integer roleId,Integer agencyId) {
         Session session = null;
         try {
             session = HibernateConfiguration.getInstance().openSession();
             if (session != null) {
                 Criteria cr = session.createCriteria(CustomerRankCustomer.class, "c");
                 cr.createAlias("c.customer", "cus", JoinType.LEFT_OUTER_JOIN);
-                cr.createAlias("c.provincialAgencies", "pA", JoinType.LEFT_OUTER_JOIN);
+                cr.createAlias("cus.provincialAgencies", "pA", JoinType.LEFT_OUTER_JOIN);
                 cr.createAlias("cus.customerByParentId", "customerByParentId", JoinType.LEFT_OUTER_JOIN);
                 cr.createAlias("cus.customerByCustomerId", "customerByCustomerId", JoinType.LEFT_OUTER_JOIN);
                 cr.add(Restrictions.and(Restrictions.eq("c.isDeleted", false), Restrictions.eq("cus.isDelete", false), Restrictions.eq("cus.isActive", true)));
+                if (roleId == 2 && agencyId != 0) {
+                    cr.add(Restrictions.eq("pA.id", agencyId));
+                } else if (historyPagination.getAgencyId() != null) {
+                    cr.add(Restrictions.eq("pA.id", historyPagination.getAgencyId()));
+                }
+                
+                if (historyPagination.getStartDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
+                }
+
+                if (historyPagination.getEndDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
+                }
 
                 List<String> listKeywords = historyPagination.getKeywords();
                 Disjunction disj = Restrictions.disjunction();
@@ -67,11 +81,10 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                         .add(Projections.property("cus.lastName"), "lastName")
                         .add(Projections.property("cus.firstName"), "firstName")
                         .add(Projections.property("pricePv"), "pricePv")
-                        .add(Projections.property("dateCreated"), "dateCreated")
+                        .add(Projections.property("c.dateCreated"), "dateCreated")
                         .add(Projections.property("pA.name"), "provincialAgencyName")
                         .add(Projections.property("customerByParentId.userName"), "parentName")
-                        .add(Projections.property("customerByCustomerId.userName"), "customerName")
-                        .add(Projections.property("pA.name"), "provincialAgencyName"))
+                        .add(Projections.property("customerByCustomerId.userName"), "customerName"))
                         .setResultTransformer(Transformers.aliasToBean(HistoryCustomerRank.class));
                 cr.setFirstResult(historyPagination.getFirstResult());
                 cr.setMaxResults(historyPagination.getDisplayPerPage());

@@ -4,6 +4,10 @@ import java.util.Date;
 
 public class HistoryPagination extends DefaultAdminPagination {
 
+    public String getCHANGE_DAY() {
+        return CHANGE_DAY;
+    }
+
     public String getCHANGE_DATE() {
         return CHANGE_DATE;
     }
@@ -22,12 +26,15 @@ public class HistoryPagination extends DefaultAdminPagination {
 
     private String grandController;
     private final static String CHANGE_DATE = "/ChangeDate";
+    private final static String CHANGE_DAY = "/ChangeDay";
     private final static String CHANGE_PIN_TYPE = "/ChangePinType";
     private final static String EXPORT = "/Export";
     private final static String ACTIVE = "/Active";
     private Date day = null;
     private Integer pinType = null;
     private Boolean accepted = null;
+    private Date startDate;
+    private Date endDate;
 
     private Integer agencyId = null;    
 
@@ -99,5 +106,21 @@ public class HistoryPagination extends DefaultAdminPagination {
 
     public void setAgencyId(Integer agencyId) {
         this.agencyId = agencyId;
+    }
+
+    public Date getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Date startDate) {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

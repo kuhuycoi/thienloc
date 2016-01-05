@@ -50,6 +50,10 @@
                             </div>
                         </div>
                     </form>
+                                              
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a class="btn-open-modal btn-sm btn btn-default" controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_INSERT}'/>">Thêm mới <i class="fa fa-plus"></i></a></li>
+                    </ul>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>

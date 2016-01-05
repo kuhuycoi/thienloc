@@ -4,7 +4,6 @@ import com.google.gson.Gson;
 import com.resources.facade.CustomerFacade;
 import com.resources.facade.ProvincialAgenciesFacade;
 import com.resources.bean.CustomerNonActive;
-import com.resources.entity.Admin;
 import com.resources.entity.ProvincialAgencies;
 import com.resources.facade.AdminFacade;
 import com.resources.facade.AgencyFacade;
@@ -36,10 +35,7 @@ public class AdminCustomerController {
     @RequestMapping(value = "/TreeCustomer", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getTreeCustomerView(ModelMap mm, HttpSession session) {
-        CustomerPagination treeCustomerPagination = (CustomerPagination) session.getAttribute("TREE_PAGINATION");
-        if (treeCustomerPagination == null) {
-            treeCustomerPagination = new CustomerPagination("/customer_tree_customer", "/TreeCustomer");
-        }
+        CustomerPagination treeCustomerPagination = new CustomerPagination("/customer_tree_customer", "/TreeCustomer");
         session.setAttribute("TREE_PAGINATION", treeCustomerPagination);
         String tree = CustomFunction.buildTreeCustomer(new CustomerFacade().getTreeCustomer(Integer.parseInt(session.getServletContext().getInitParameter("fisrtId")), 6), 1, "/Admin/Customer/TreeCustomer");
         mm.put("TREE_CUSTOMER", tree);
@@ -277,7 +273,6 @@ public class AdminCustomerController {
     public ModelAndView gotoProvincialAgenciesView(@PathVariable("page") int page, HttpSession session) {
         ProvincialAgencyPagination provincialAgencyPagination = (ProvincialAgencyPagination) session.getAttribute("PROVINCIAL_AGENCIES_PAGINATION");
         if (provincialAgencyPagination != null) {
-
             provincialAgencyPagination.setCurrentPage(page);
         }
         return provincialAgenciesView(provincialAgencyPagination, session);
@@ -307,6 +302,77 @@ public class AdminCustomerController {
         return new ModelAndView(DefaultAdminPagination.AJAX_FOLDER + provincialAgencyPagination.getViewName());
     }
 
+    @RequestMapping(value = "/ProvincialAgencies/ViewInsert", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getProvincialAgenciesViewInsert(ModelMap mm, HttpSession session) {
+        ProvincialAgencyPagination provincialAgencyPagination = (ProvincialAgencyPagination) session.getAttribute("PROVINCIAL_AGENCIES_PAGINATION");
+        return new ModelAndView(DefaultAdminPagination.AJAX_FOLDER + provincialAgencyPagination.getInsertViewName());
+    }
+
+    @RequestMapping(value = "/ProvincialAgencies/ViewEdit/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getProvincialAgenciesViewEdit(@PathVariable(value = "id") Integer id, ModelMap mm, HttpSession session) {
+        ProvincialAgencyPagination provincialAgencyPagination = (ProvincialAgencyPagination) session.getAttribute("PROVINCIAL_AGENCIES_PAGINATION");
+        ProvincialAgencies agency = (ProvincialAgencies) new ProvincialAgenciesFacade().find(id);
+        mm.put("PROVINCIAL_AGENCY_EDIT", agency);
+        return new ModelAndView(DefaultAdminPagination.AJAX_FOLDER + provincialAgencyPagination.getEditViewName());
+    }
+
+    @RequestMapping(value = "/ProvincialAgencies/Insert", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView insertNewCustomer(@RequestBody ProvincialAgencies provincialAgencies, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        try {
+            Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+            if (role != 1) {
+                LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Thêm mới đại lý, lỗi");
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Bạn không đủ quyền để thực hiện hành động này!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            Integer id = new ProvincialAgenciesFacade().create(provincialAgencies);
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Thêm mới đại lý" + id + ", thành công!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Thêm mới đại lý thành công!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Thêm mới đại lý, lỗi");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+    }
+
+    @RequestMapping(value = "/ProvincialAgencies/Edit", method = RequestMethod.POST)
+    @ResponseBody
+    public ModelAndView editNewCustomer(@RequestBody ProvincialAgencies provincialAgencies, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        try {
+            Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+            if (role != 1) {
+                LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Cập nhật đại lý id: " + provincialAgencies.getId() + ", lỗi");
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Bạn không đủ quyền để thực hiện hành động này!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            provincialAgencies.setIsDeleted(((ProvincialAgencies) new ProvincialAgenciesFacade().find(provincialAgencies.getId())).getIsDeleted());
+            new ProvincialAgenciesFacade().edit(provincialAgencies);
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Cập nhật đại lý id: " + provincialAgencies.getId() + ", thành công!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Cập nhật đại lý thành công!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_ADD, 3, "Cập nhật đại lý id: " + provincialAgencies.getId() + ", lỗi");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+    }
+
     @RequestMapping(value = "/ProvincialAgencies/Block/{id}/{status}", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView blockProvincialAgencies(@PathVariable Integer id, @PathVariable Boolean status,
@@ -318,11 +384,41 @@ public class AdminCustomerController {
         try {
             new ProvincialAgenciesFacade().edit(provincialAgencies);
         } catch (Exception e) {
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_UPDATE, 3, !provincialAgencies.getIsShow() ? "Hiện" : "Ẩn" + " đại lý" + id + ", lỗi!");
             mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
             mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
         }
+        LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_UPDATE, 3, provincialAgencies.getIsShow() ? "Hiện" : "Ẩn" + " đại lý" + id + ", thành công!");
         mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", provincialAgencies.getIsShow() ? "Hiện" : "Ẩn" + " đại lý thành công!");
+        mm.put("MESSAGE_PAGINATION", mP);
+        return mAV;
+    }
+
+    @RequestMapping(value = "/ProvincialAgencies/Delete/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView deleteProvincialAgencies(@PathVariable Integer id, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        ProvincialAgencies provincialAgencies = (ProvincialAgencies) new ProvincialAgenciesFacade().find(id);
+        provincialAgencies.setIsDeleted(true);
+        Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        if (role != 1) {
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_DELETE, 3, "Xóa đại lý" + id + ", lỗi!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Bạn không đủ quyền để thực hiện hành động này!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        try {
+            new ProvincialAgenciesFacade().edit(provincialAgencies);
+        } catch (Exception e) {
+            LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_DELETE, 3, "Xóa đại lý" + id + ", lỗi!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        LogUtils.logs((Integer) session.getAttribute("ADMIN_ID"), LeoConstants.ActionConstants.ACTION_DELETE, 3, "Xóa đại lý" + id + ", thành công!");
+        mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Xóa đại lý thành công!");
         mm.put("MESSAGE_PAGINATION", mP);
         return mAV;
     }

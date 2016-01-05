@@ -56,13 +56,40 @@
                             <li><a href="#" class="btn-sm btn btn-default btn-open-modal" controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_INSERT}'/>">Nạp PV <i class="fa fa-user-plus"></i></a></li>
                         </ul>
                     </c:if>
+                    <div class="navbar-form navbar-right">
+                        <div class="form-group form-group-sm">
+                            <label class="control-label">Ngày bắt đầu: </label>
+                            <div class="input-group datepicker">
+                                <input type="text" name="startDate" readonly="" class="form-control change-time" controller='<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.CHANGE_DAY}/0/"/>' />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
+                        <div class="form-group form-group-sm">
+                            <label class="control-label">Ngày kết thúc: </label>                            
+                            <div class="input-group datepicker">
+                                <input type="text" name="startDate" readonly="" class="form-control change-time" controller='<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.CHANGE_DAY}/1/"/>' />
+                                <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
+                            </div>
+                        </div>
+                    </div>
+                    <c:if test="${ROLE!=2}">
+                        <div class="navbar-form navbar-right">
+                            <div class="form-group">
+                                <label class="control-label">Đại lý: </label>
+                                <select class="form-control change-date" controller="<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}/ChangeAgency/"/>">
+                                    <option value="-1" ${PAGINATION.accepted==null?'selected':''}>-- Tất cả --</option>
+                                    <c:forEach items="${f:findAllAvailableProvincialAgencies()}" var="pro">
+                                        <option value="${pro.id}">${pro.name}</option>
+                                    </c:forEach>
+                                </select>
+                            </div>
+                        </div>
+                    </c:if>
                 </div><!-- /.navbar-collapse -->
             </div><!-- /.container-fluid -->
         </nav>
     </div><!-- end panel heading -->
-    <div class="panel-body">
-        <div class="ajax-content">  
-            <c:import url="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.GO_TO}/${PAGINATION.currentPage}"/>
-        </div>
+    <div class="panel-body ajax-content">
+        <c:import url="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.GO_TO}/${PAGINATION.currentPage}"/>
     </div>
 </div><!-- end panel-->

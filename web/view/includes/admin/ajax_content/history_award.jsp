@@ -12,39 +12,21 @@
     <table class="table table-condensed table-hover table-valign-midle table-grid-view table-align-center table-bordered">
         <thead>
             <tr controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.ORDER_DATA}/'/>">
-                <th class="th-checkbox external"><input class="select-all" type="checkbox" /></th>
                 <th class="th-id" column="id">ID <span class="${PAGINATION.orderColmn=='id'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-4 text-left" column="name">Thưởng <span class="${PAGINATION.orderColmn=='name'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="col-md-2" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="col-md-2" column="pricePv">Tiền thưởng <span class="${PAGINATION.orderColmn=='pricePv'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-3" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-2 text-right" column="pricePv">Tiền thưởng <span class="${PAGINATION.orderColmn=='pricePv'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="dateCreated">Ngày thưởng <span class="${PAGINATION.orderColmn=='dateCreated'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="th-action external">
-                    <div class="btn-group btn-group-sm">
-                        <a type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i></a>
-                        <ul class="dropdown-menu dropdown-menu-right dropdown-menu-multiple" role="menu">
-                            <li><a href="#">Xóa</a></li>
-                        </ul>
-                    </div>
-                </th>
             </tr>
         </thead>
         <tbody>
             <c:forEach items="${PAGINATION.displayList}" var="award">
                 <tr>
-                    <td class="text-center"><input type="checkbox" /></td>
                     <td class="td-align-center">${award.id}</td>
                     <td class="text-left">${award.name}</td>
                     <td>${award.userName}</td>
-                    <td>${f:formatCurrency(award.pricePv)}</td>
+                    <td class="text-right bold-blue">${f:formatCurrency(award.pricePv)}</td>
                     <td>${f:formatTime(award.dateCreated)}</td>
-                    <td>
-                        <div class="btn-group btn-group-sm">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i></button>
-                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-action" role="menu">
-                                <li><a class="external" controller="#">Xóa</a></li>
-                            </ul>
-                        </div>
-                    </td>
                 </tr>
             </c:forEach>
         </tbody>

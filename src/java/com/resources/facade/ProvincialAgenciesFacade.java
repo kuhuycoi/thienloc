@@ -5,19 +5,20 @@ import com.resources.entity.ProvincialAgencies;
 import com.resources.pagination.admin.DefaultAdminPagination;
 import com.resources.pagination.admin.ProvincialAgencyPagination;
 import com.resources.utils.StringUtils;
-import java.io.Serializable;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Criteria;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.transform.Transformers;
 
-public class ProvincialAgenciesFacade extends AbstractFacade implements Serializable {
+public class ProvincialAgenciesFacade extends AbstractFacade {
 
     public ProvincialAgenciesFacade() {
         super(ProvincialAgencies.class);
@@ -84,6 +85,41 @@ public class ProvincialAgenciesFacade extends AbstractFacade implements Serializ
         } finally {
             HibernateConfiguration.getInstance().closeSession(session);
         }
+    }
+
+    public Integer create(ProvincialAgencies entity) throws Exception {
+        Transaction trans = null;
+        Session session = null;
+        Integer id = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            trans = session.beginTransaction();
+
+            if (entity == null) {
+                throw new NullPointerException();
+            }
+
+            entity.setName(StringUtils.escapeHtmlEntity(entity.getName()));
+            entity.setAddress(StringUtils.escapeHtmlEntity(entity.getAddress()));
+            entity.setMobile(StringUtils.escapeHtmlEntity(entity.getMobile()));
+            entity.setFax(StringUtils.escapeHtmlEntity(entity.getFax()));
+
+            id = (Integer) session.save(entity);
+            trans.commit();
+            session.flush();
+        } catch (HibernateException e) {
+            try {
+                if (trans != null) {
+                    trans.rollback();
+                }
+            } catch (Exception ex) {
+                throw ex;
+            }
+            throw e;
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+        return id;
     }
 
     @Override

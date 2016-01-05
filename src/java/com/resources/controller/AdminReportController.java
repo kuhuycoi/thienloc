@@ -75,10 +75,7 @@ public class AdminReportController {
     @RequestMapping(value = "/ComissionDistributor/ChangeDay/{type}/{day}", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-mm-dd") Date day, HttpSession session) {
-        ReportPagination reportPagination = (ReportPagination) session.getAttribute("COMISSION_DISTRIBUTOR_PAGINATION");
-        if (reportPagination == null) {
-            reportPagination = new ReportPagination("Thống kê hoa hồng nhà phân phối", "cusId", true, "/ComissionDistributor", "/report_commission_distributor");
-        }
+        ReportPagination reportPagination = new ReportPagination("Thống kê hoa hồng nhà phân phối", "cusId", true, "/ComissionDistributor", "/report_commission_distributor");
         day = "-1".equals(day) ? null : day;
         if (type == 0) {
             reportPagination.setStartDate(day);

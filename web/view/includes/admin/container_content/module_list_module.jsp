@@ -74,8 +74,8 @@
                                         <ul class="module-action">
                                             <li><a class="btn-open-modal text-success" data-toggle="tooltip" data-placement="top" title="Thêm mới module con cho module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_INSERT}/${MODULE.id}"><i class="fa fa-plus-circle"></i></a></li>
                                             <li><a class="btn-open-modal text-primary" data-toggle="tooltip" data-placement="top" title="Cập nhật module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_EDIT}/${MODULE.id}"><i class="fa fa-edit"></i></a></li>
-                                            <li><a class="text-warning" data-toggle="tooltip" data-placement="top" title="${MODULE.isShow?'Khóa':'Mở Khóa'} module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}"><i class="fa ${MODULE.isShow?'fa-lock':'fa-unlock'}"></i></a></li>
-                                            <li><a class="text-danger" data-toggle="tooltip" data-placement="top" title="Xóa module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${MODULE.id}"><i class="fa fa-trash-o"></i></a></li>
+                                            <li><a class="text-warning btn-send-ajax" data-toggle="tooltip" data-placement="top" title="${MODULE.isShow?'Khóa':'Mở Khóa'} module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}/ChangeStatus/${MODULE.id}"><i class="fa ${MODULE.isShow?'fa-lock':'fa-unlock'}"></i></a></li>
+                                            <li><a class="text-danger btn-send-ajax" data-toggle="tooltip" data-placement="top" title="Xóa module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${MODULE.id}"><i class="fa fa-trash-o"></i></a></li>
                                         </ul>
                                     </label> 
                                     <ul>                                                    
@@ -86,8 +86,8 @@
                                                         <span>${childrenModule.name}</span>                                                        
                                                         <ul class="module-action">
                                                             <li><a class="btn-open-modal text-primary" data-toggle="tooltip" data-placement="top" title="Cập nhật module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_EDIT}/${childrenModule.id}"><i class="fa fa-edit"></i></a></li>
-                                                            <li><a class="text-warning" data-toggle="tooltip" data-placement="top" title="${childrenModule.isShow?'Khóa':'Mở Khóa'} module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}"><i class="fa ${childrenModule.isShow?'fa-lock':'fa-unlock'}"></i></a></li>
-                                                            <li><a class="text-danger" data-toggle="tooltip" data-placement="top" title="Xóa module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${childrenModule.id}"><i class="fa fa-trash-o"></i></a></li>
+                                                            <li><a class="text-warning btn-send-ajax" data-toggle="tooltip" data-placement="top" title="${childrenModule.isShow?'Khóa':'Mở Khóa'} module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}/ChangeStatus/${childrenModule.id}"><i class="fa ${childrenModule.isShow?'fa-lock':'fa-unlock'}"></i></a></li>
+                                                            <li><a class="text-danger btn-send-ajax" data-toggle="tooltip" data-placement="top" title="Xóa module này" controller="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${childrenModule.id}"><i class="fa fa-trash-o"></i></a></li>
                                                         </ul>
                                                     </label>
                                                 </li>                                                            
@@ -111,6 +111,6 @@
         }else{
             $(this).children('.fa').removeClass('fa-plus-square-o').addClass('fa-minus-square-o');
         }
-        $(this).parent('label').parent('li').children('ul').toggle(300);
+        $(this).parent('label').parent('li').children('ul').stop().toggle(300);
     });
 </script>

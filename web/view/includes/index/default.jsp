@@ -48,6 +48,11 @@
                 </ul>
             </div>
         </div>
+    </div>    
+    <div class="row" style="margin-top: 20px;">
+        <div class="col-xs-12">
+            <img src="<c:url value="/resources/img/tinvuixuan2.png"/>" alt=""/>
+        </div>
     </div>
 </div>
 <%--<ul class="slider">
