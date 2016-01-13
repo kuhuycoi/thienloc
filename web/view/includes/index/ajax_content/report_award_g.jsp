@@ -14,8 +14,13 @@
     <tbody>
         <tr>
             <td class="text-left">Tổng doanh số trong tháng</td>
-            <td>${f:formatPV(RANKNOW.pvmonth+RANKNOW.pvuser)}</td>
-            <td>${f:formatPV(RANKNOW.pvmonth1+RANKNOW.pvuser1)}</td>
+            <td>${f:formatPV(RANKNOW.pvmonth)}</td>
+            <td>${f:formatPV(RANKNOW.pvmonth1)}</td>
+        </tr>
+        <tr>
+            <td class="text-left">Tổng doanh số bảo lưu</td>
+            <td>${f:formatPV(RANKNOW.pvuser)}</td>
+            <td>${f:formatPV(RANKNOW.pvuser1)}</td>
         </tr>
         <tr>
             <td class="text-left">Tổng doanh số tích lũy</td>

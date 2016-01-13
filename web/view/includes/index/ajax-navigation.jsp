@@ -11,6 +11,7 @@
         <ul>
             <li><a class="btn-change-content blueColor" controller="<c:url value="/Customer/MyAccount" />">Thông tin tài khoản</a></li> 
             <li><a class="btn-change-content blueColor" controller="<c:url value="/Customer/ChangePassword" />">Thay đổi mật khẩu</a></li> 
+            <li><a class="btn-change-content blueColor" controller="<c:url value="/Customer/ViewChangeAgency" />">Cập nhật đại lý</a></li> 
                 <%--<li><a class="btn-open-diagram" controller="<c:url value="/Customer/TreeCustomer" />">Cây phả hệ chỉ định</a></li>--%> 
             <li><a class="btn-change-content blueColor" controller="<c:url value="/Customer/TreeFolderCustomer" />">Cây thư mục chỉ định</a></li> 
             <li><a class="btn-change-content blueColor" controller="<c:url value='/Customer/CustomerForCustomer'/>">Danh sách bảo trợ F1</a></li>
@@ -54,8 +55,8 @@
             <li>
                 <select id="cbAwardType" class="form-control" controller="<c:url value="/Report/Award/" />">
                     <option value="4/-1">Hoa hồng trực tiếp</option>           
-                    <option value="1/-1">Hoa hồng nén tầng</option>           
-                    <option value="13/0">Hoa hồng cân nhánh</option>           
+                    <option value="1/-1">Hoa hồng cộng hưởng</option>           
+                    <option value="13/-1">Hoa hồng cân nhánh</option>           
                     <%--<option value="13/2">Hoa hồng Silver</option>          
                     <option value="13/3">Hoa hồng Gold</option>            
                     <option value="13/4">Hoa hồng Shaphia</option>           
@@ -69,20 +70,22 @@
                     <option value="15/7">Hoa hồng phần trăm gói kim cương</option>       
                     <option value="14/-1">Hoa hồng lãnh đạo</option>       
                     <option value="6/-1">Lương hệ thống</option>     
-                    <option value="1/-1">Hoa hồng hoàn vốn</option>  
+                    <!--<option value="1/-1">Hoa hồng hoàn vốn</option>  -->
                     <option value="3/-1">Hoa hồng lên cấp</option>  
-                     <option value="2/-1">Hoa hồng phần trăm lãnh đạo</option> 
+                    <option value="2/-1">Hoa hồng phần trăm đồng hưởng công ty</option> 
                 </select>
             </li>
             <li>
                 <a class="btn btn-default btn-sm" id="btn-view-award">Xem</a>
             </li>
             <li><hr/></li>
-            <li><b>Tổng:</b> <i>${f:formatCurrency(f:getTotalOutOfCustomerId(sessionScope['CUSTOMER_ID']))}</i></li>           
-            
-                <%--<li>
-                    <a class="btn-change-content" controller="<c:url value="/Report/AwardTotal" />">Tổng thu nhập theo tháng</a>
-                </li>--%>
+                <c:set var="totalOutOfCustomerId" value="${f:getTotalOutOfCustomerId(sessionScope['CUSTOMER_ID'])}" />
+            <li><b>Tổng hoa hồng:</b> <i>${f:formatCurrency(totalOutOfCustomerId)}</i></li>           
+            <li><b>Tổng hệ thống:</b> <i>${CUSTOMER.peoplesIdentity==null?f:formatCurrency(totalOutOfCustomerId):f:formatCurrency(f:getSystemAwards(CUSTOMER.peoplesIdentity))}</i></li>           
+
+            <%--<li>
+                <a class="btn-change-content" controller="<c:url value="/Report/AwardTotal" />">Tổng thu nhập theo tháng</a>
+            </li>--%>
         </ul>
     </div>
 </div>

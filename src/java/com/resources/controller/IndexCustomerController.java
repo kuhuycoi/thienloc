@@ -4,6 +4,7 @@ import com.resources.facade.CustomerFacade;
 import com.resources.bean.CustomerNonActive;
 import com.resources.bean.CustomerTree;
 import com.resources.entity.Customer;
+import com.resources.entity.ProvincialAgencies;
 import com.resources.function.CustomFunction;
 import com.resources.pagination.index.*;
 import com.resources.utils.ConfigUtils;
@@ -252,6 +253,16 @@ public class IndexCustomerController {
                 return mAV;
             }
             case 8: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Không được sử dụng số CMND của mã chủ!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 9: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 10: {
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Đăng ký thành công, Username: " + customerNonActive.getUserName() + "!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
@@ -415,5 +426,31 @@ public class IndexCustomerController {
     public ModelAndView searchCustomerId(@PathVariable("searchString") String searchString, @PathVariable("parentName") String parentName, ModelMap mm) {
         mm.put("PARENTIDLIST", new CustomerFacade().findAllCustomerForCustomerId(searchString));
         return new ModelAndView(DefaultIndexPagination.AJAX_FOLDER + "/customer_parentid_list");
+    }
+
+    //Change agency view
+    @RequestMapping(value = "/ViewChangeAgency", method = RequestMethod.GET)
+    public ModelAndView getViewChangeAgency(HttpServletRequest request) {
+        return new ModelAndView("includes/index/ajax_content/customer_change_agency");
+    }
+
+    //Change agency action
+    @RequestMapping(value = "/ChangeAgency", method = RequestMethod.POST)
+    public ModelAndView getViewChangeAgency(@RequestBody Map map, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        try {
+            Customer cus = (Customer) new CustomerFacade().find((Integer) session.getAttribute("CUSTOMER_ID"));
+            cus.setProvincialAgencies(new ProvincialAgencies(Integer.parseInt(map.get("provinceAgencyId").toString())));
+            new CustomerFacade().edit(cus);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "Thành công", "Cập nhật đại lý thành công!");
+        mm.put("MESSAGE_PAGINATION", mP);
+        return mAV;
     }
 }

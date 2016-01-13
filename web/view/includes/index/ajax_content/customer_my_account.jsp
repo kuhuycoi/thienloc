@@ -29,7 +29,7 @@
             </tr>
             <tr>
                 <td>Ngày kích hoạt</td>
-                <td>${CUSTOMER.lastLoginDateUtc==null?"Chưa kích hoạt":f:formatTime(CUSTOMER.lastLoginDateUtc)}</td>
+                <td>${CUSTOMER.lastLoginDateUtc==null?"":f:formatTime(CUSTOMER.lastLoginDateUtc)}</td>
             </tr>
             <tr>
                 <td>Hoa hồng trước thuế</td>

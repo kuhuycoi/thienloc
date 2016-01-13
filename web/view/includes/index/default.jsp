@@ -2,7 +2,6 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="/WEB-INF/tlds/functions.tld" %>
 
-
 <%--<div style="color: #fff;margin-bottom: 20px;background-color: #993300;padding: 30px 15px">
     <h2 style="text-transform: uppercase;text-align: center;font-size: 20px;color: yellow;margin-bottom:20px;line-height:40px">PHẦN MỀM ĐĂNG KÍ NPP MIỄN PHÍ ĐÃ ĐƯỢC ĐÓNG. XIN TRÂN TRỌNG THÔNG BÁO!</h2>
     <h1 style="text-transform: uppercase;text-align: center;color: yellow">Thông báo!</h1>
@@ -48,12 +47,20 @@
                 </ul>
             </div>
         </div>
-    </div>    
+    </div>   
+	<div style="color: #fff;margin-bottom: 20px;background-color: #993300;padding: 30px 15px">
+		<h1 style="text-transform: uppercase;text-align: center;color: yellow">Thông báo!</h1>
+		<p style="line-height: 24px;text-align: justify; color: #fff;font-size: 20px">
+			Vì lý do web đồng bộ mấy ngày vừa qua nên có một số NPP tích luỹ mức Đồng hay Bạc nhưng vẫn không được chia phần trăm Khuyến Mại. Vì vậy để công bằng cho NPP công ty đã đồng bộ lại toàn bộ những khoản hoa hồng để chia đều cho những NPP chưa được nhận hoa hồng mấy ngày qua.vì vậy những NPP được chia hoa hồng trước đó sẽ bị giảm hoa hồng của mình.
+			<br><br>Trân trọng!</p>
+	</div>
+    <%--
     <div class="row" style="margin-top: 20px;">
         <div class="col-xs-12">
             <img src="<c:url value="/resources/img/tinvuixuan2.png"/>" alt=""/>
         </div>
     </div>
+    --%>
 </div>
 <%--<ul class="slider">
     <li>

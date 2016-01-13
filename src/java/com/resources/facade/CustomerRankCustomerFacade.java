@@ -1,6 +1,7 @@
 package com.resources.facade;
 
 import com.resources.bean.CustomerFromTotalParent;
+import com.resources.bean.ExcelFile;
 import com.resources.bean.HistoryCustomerRank;
 import com.resources.entity.CheckAwards;
 import com.resources.entity.Customer;
@@ -15,6 +16,7 @@ import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
 import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,7 +40,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
         super(CustomerRankCustomer.class);
     }
 
-    public void pageData(HistoryPagination historyPagination,Integer roleId,Integer agencyId) {
+    public void pageData(HistoryPagination historyPagination, Integer roleId, Integer agencyId) {
         Session session = null;
         try {
             session = HibernateConfiguration.getInstance().openSession();
@@ -54,7 +56,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 } else if (historyPagination.getAgencyId() != null) {
                     cr.add(Restrictions.eq("pA.id", historyPagination.getAgencyId()));
                 }
-                
+
                 if (historyPagination.getStartDate() != null) {
                     cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
                 }
@@ -145,114 +147,11 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
 
             result = (Integer) q.uniqueResult();
             if (result == 2 && rankCustomerId != 2) {
-
                 q = session.getNamedQuery("TotalParent");
                 q.setParameter("listCustomerId", c.getListCustomerId())
                         .setParameter("cusId", c.getId())
                         .setParameter("rankId", rankCustomerId);
-
-                List<CustomerFromTotalParent> customerFromTotalParent = q.list();
-                for (CustomerFromTotalParent cus : customerFromTotalParent) {
-                    BigDecimal pv;
-                    int basicpv = 40;
-                    int maxCircle = 100;
-                    if (null != cus.getLevel()) {
-                        switch (cus.getLevel()) {
-                            case 3:
-                                maxCircle = 200;
-                                basicpv = 50;
-                                break;
-                            case 4:
-                                maxCircle = 300;
-                                basicpv = 60;
-                                break;
-                            case 5:
-                                maxCircle = 500;
-                                basicpv = 70;
-                                break;
-                            case 6:
-                                maxCircle = 600;
-                                basicpv = 80;
-                                break;
-                            case 7:
-                                maxCircle = 800;
-                                basicpv = 90;
-                                break;
-                            case 8:
-                                maxCircle = 1000;
-                                basicpv = 100;
-                                break;
-                            default:
-                        }
-                    }
-                    if (cus.getCircle() != null) {
-                        if (cus.getPVANow() == null) {
-                            if (cus.getCircle() < maxCircle && cus.getCurrentCircle() == null) {
-                                pv = BigDecimal.valueOf(cus.getCircle() * basicpv);
-                            }
-
-                            pv = BigDecimal.valueOf(cus.getCircle() * basicpv);
-                            if (pv.compareTo(BigDecimal.ZERO) > 0) {
-                                HistoryAwards ha = new HistoryAwards();
-                                ha.setCustomer(new Customer(cus.getID()));
-                                System.out.println("ID:" + cus.getID());
-                                ha.setPricePv(pv);
-                                ha.setPrice(pv.multiply(BigDecimal.valueOf(10)));
-                                ha.setName("Thưởng cân nhánh từ nhà phân phối: " + c.getUserName());
-                                ha.setCustomerRankId(rankCustomerId);
-                                ha.setLevel(cus.getLevel());
-                                ha.setCheckAwards(new CheckAwards(13));
-                                ha.setCurrentCycle(cus.getCircle());
-                                ha.setCycleNumber(cus.getCircle());
-                                ha.setPvanow(cus.getRnPricePVUser().add(cus.getPVMonth()));
-
-                                ha.setPvbnow(cus.getRnPricePVUser1().add(cus.getPVMonth1()));
-                                session.save(ha);
-
-                                if (cus.getCircle() == maxCircle) {
-                                    session.createSQLQuery("update ranknow set ActiveRank=2 where CustomerId=:cusid").setParameter("cusid", cus.getID()).executeUpdate();
-                                }
-                            }
-
-                        } else if (cus.getPVANow() != null) {
-                            int circleCheck = cus.getCircle() + cus.getCircleOld();
-                            int multiple = 0;
-
-                            if (circleCheck < maxCircle) {
-                                multiple = circleCheck - cus.getCurrentCircle();
-
-                                pv = BigDecimal.valueOf(multiple * basicpv);
-
-                            } else {
-                                pv = BigDecimal.valueOf((maxCircle - cus.getCurrentCircle()) * basicpv);
-                                if (!pv.equals(0)) {
-                                    circleCheck = maxCircle;
-                                }
-
-                            }
-                            if (pv.compareTo(BigDecimal.ZERO) > 0) {
-                                HistoryAwards ha = new HistoryAwards();
-                                ha.setCustomer(new Customer(cus.getID()));
-                                ha.setPricePv(pv);
-                                ha.setPrice(pv.multiply(BigDecimal.valueOf(10)));
-                                ha.setName("Thưởng cân nhánh từ nhà phân phối: " + c.getUserName());
-                                ha.setCustomerRankId(rankCustomerId);
-                                ha.setLevel(cus.getLevel());
-                                ha.setCycleNumber(multiple);
-                                ha.setCurrentCycle(circleCheck);
-                                ha.setCheckAwards(new CheckAwards(13));
-                                ha.setPvanow(cus.getRnPricePVUser().add(cus.getPVMonth()));
-                                ha.setPvbnow(cus.getRnPricePVUser1().add(cus.getPVMonth1()));
-                                session.save(ha);
-
-                                if (circleCheck == maxCircle) {
-                                    session.createSQLQuery("update ranknow set ActiveRank=2 where CustomerId=:cusid").setParameter("cusid", cus.getID()).executeUpdate();
-                                }
-
-                            }
-                        }
-                    }
-                }
+                q.executeUpdate();
             }
             RankCustomes rc = (RankCustomes) new RankCustomersFacade().find(rankCustomerId);
             LogUtils.logs(adminId, LeoConstants.ActionConstants.ACTION_NAPTIEN, 4, "Nạp PV tại người dùng: '" + userName + "', Gói: '" + rc.getName() + "'");
@@ -383,6 +282,78 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 historyPagination.setDisplayList(cr.list());
             }
         } catch (Exception e) {
+            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+
+    public void setExportCustomerRankCustomerFile(ExcelFile file, HistoryPagination historyPagination, Integer roleId, Integer agencyId) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+
+                Criteria cr = session.createCriteria(CustomerRankCustomer.class, "c");
+                cr.createAlias("c.customer", "cus", JoinType.LEFT_OUTER_JOIN);
+                cr.createAlias("c.rankCustomes", "rankCustomes", JoinType.LEFT_OUTER_JOIN);
+                cr.createAlias("cus.provincialAgencies", "pA", JoinType.LEFT_OUTER_JOIN);
+                cr.createAlias("cus.customerByParentId", "customerByParentId", JoinType.LEFT_OUTER_JOIN);
+                cr.createAlias("cus.customerByCustomerId", "customerByCustomerId", JoinType.LEFT_OUTER_JOIN);
+                cr.add(Restrictions.and(Restrictions.eq("c.isDeleted", false), Restrictions.eq("cus.isDelete", false), Restrictions.eq("cus.isActive", true)));
+                if (roleId == 2 && agencyId != 0) {
+                    cr.add(Restrictions.eq("pA.id", agencyId));
+                } else if (historyPagination.getAgencyId() != null) {
+                    cr.add(Restrictions.eq("pA.id", historyPagination.getAgencyId()));
+                }
+
+                if (historyPagination.getStartDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
+                }
+
+                if (historyPagination.getEndDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
+                }
+
+                List<String> listKeywords = historyPagination.getKeywords();
+                Disjunction disj = Restrictions.disjunction();
+                for (String k : listKeywords) {
+                    if (StringUtils.isEmpty(historyPagination.getSearchString())) {
+                        break;
+                    }
+                    disj.add(Restrictions.sqlRestriction("CAST(" + k + " AS VARCHAR) like '%" + historyPagination.getSearchString() + "%'"));
+                }
+                cr.add(disj);
+
+                cr.setProjection(Projections.rowCount());
+                historyPagination.setTotalResult(((Long) cr.uniqueResult()).intValue());
+                cr.setProjection(Projections.projectionList()
+                        .add(Projections.property("id"), "id")
+                        .add(Projections.property("cus.lastName"), "lastName")
+                        .add(Projections.property("cus.userName"), "userName")
+                        .add(Projections.property("customerByCustomerId.userName"), "customerName")
+                        .add(Projections.property("customerByParentId.userName"), "parentName")
+                        .add(Projections.property("pA.name"), "provincialAgencyName")
+                        .add(Projections.property("rankCustomes.name"), "rankCustomerName")
+                        .add(Projections.property("c.dateCreated"), "dateCreated"));
+                cr.addOrder(historyPagination.isAsc() ? Order.asc(historyPagination.getOrderColmn()) : Order.desc(historyPagination.getOrderColmn()));
+                List<String> header = new ArrayList();
+                header.add("ID");
+                header.add("Họ và tên");
+                header.add("Tên đăng nhập");
+                header.add("Người giới thiệu");
+                header.add("Người chỉ định");
+                header.add("Đại lý");
+                header.add("Gói đầu vào");
+                header.add("Ngày tham gia");
+                file.setTitles(header);
+                List rs = cr.list();
+                file.setContents(rs);
+                Calendar c = Calendar.getInstance();
+                file.setFileName("Dach sach nap PV tinh den ngay " + c.get(Calendar.DAY_OF_MONTH) + " thang " + c.get(Calendar.MONTH));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
         } finally {
             HibernateConfiguration.getInstance().closeSession(session);

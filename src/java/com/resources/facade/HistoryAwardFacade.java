@@ -116,7 +116,7 @@ public class HistoryAwardFacade extends AbstractFacade {
                     disj.add(Restrictions.sqlRestriction("CAST(" + k + " AS VARCHAR) like '%" + pagination.getSearchString() + "%'"));
                 }
                 cr.add(disj);
-                
+
                 String queryString = "select count(*) from (select h.customerId from HistoryAwards h join Customer c on h.CustomerId=c.id where h.isDeleted=0";
 
                 for (String k : listKeywords) {
@@ -133,13 +133,13 @@ public class HistoryAwardFacade extends AbstractFacade {
                     queryString += " and cast(DateCreated as date)<=:endDate";
                 }
 
-                if (pagination.getAgencyId()!= null) {
+                if (pagination.getAgencyId() != null) {
                     queryString += " and c.ProvincialAgencyID=:agencyId";
                 }
 
                 queryString += " and c.IsDelete=0 and c.IsActive=1 group by h.customerId)z";
-                Query q = session.createSQLQuery(queryString);                
-                
+                Query q = session.createSQLQuery(queryString);
+
                 if (pagination.getStartDate() != null) {
                     q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
@@ -147,12 +147,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                 if (pagination.getEndDate() != null) {
                     q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
                 }
-                if (pagination.getAgencyId()!= null) {
+                if (pagination.getAgencyId() != null) {
                     q.setParameter("agencyId", pagination.getAgencyId());
                 }
                 pagination.setTotalResult((Integer) q.uniqueResult());
-                
-                
+
                 queryString = "select sum(h.pricePv) from HistoryAwards h join Customer c on h.CustomerId=c.id where h.isDeleted=0";
 
                 for (String k : listKeywords) {
@@ -169,13 +168,13 @@ public class HistoryAwardFacade extends AbstractFacade {
                     queryString += " and cast(DateCreated as date)<=:endDate";
                 }
 
-                if (pagination.getAgencyId()!= null) {
+                if (pagination.getAgencyId() != null) {
                     queryString += " and c.ProvincialAgencyID=:agencyId";
                 }
 
                 queryString += " and c.IsDelete=0 and c.IsActive=1";
-                q = session.createSQLQuery(queryString);                
-                
+                q = session.createSQLQuery(queryString);
+
                 if (pagination.getStartDate() != null) {
                     q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
@@ -183,11 +182,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                 if (pagination.getEndDate() != null) {
                     q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
                 }
-                if (pagination.getAgencyId()!= null) {
+                if (pagination.getAgencyId() != null) {
                     q.setParameter("agencyId", pagination.getAgencyId());
                 }
-                
-                pagination.setTotalAward((BigDecimal)q.uniqueResult());
+
+                pagination.setTotalAward((BigDecimal) q.uniqueResult());
 
                 cr.setProjection(Projections.projectionList()
                         .add(Projections.sum("pricePv"), "pricePv")
@@ -218,78 +217,10 @@ public class HistoryAwardFacade extends AbstractFacade {
             session = HibernateConfiguration.getInstance().openSession();
             if (session != null) {
                 List<String> listKeywords = pagination.getKeywords();
-                String query = "select ha.customerId,c.firstName,c.lastName,c.userName,c.peoplesIdentity,c.email,c.mobile,c.address,c.taxCode,"
-                        + "c.billingAddress,isnull(t1.total,0) total1, "
-                        + "isnull(t2.total,0) total2,isnull(t3.total,0) total3, "
-                        + "isnull(t4.total,0) total4,isnull(t5.total,0) total5,isnull(t6.total,0) total6, isnull(sum(ha.PricePv),0) total7 "
+                String query = "select ha.customerId,c.lastName,c.userName,c.peoplesIdentity,c.email,c.mobile,c.address,c.taxCode,"
+                        + "c.billingAddress, isnull(sum(ha.PricePv),0) total, isnull(sum(ha.PricePv),0)*90/100 total1 "
                         + "from HistoryAwards ha left join Customer c "
-                        + "on ha.CustomerId=c.id "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=1";
-
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-
-                query += " group by CustomerId) t1 "
-                        + " on ha.CustomerId=t1.CustomerId "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=3 ";
-
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-                query += " group by CustomerId) t2 on ha.CustomerId=t2.CustomerId "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=4 ";
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-
-                query += " group by CustomerId) t3 on ha.CustomerId=t3.CustomerId "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=13 ";
-
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-
-                query += " group by CustomerId) t4 on ha.CustomerId=t4.CustomerId "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=14";
-
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-
-                query += " group by CustomerId) t5 on ha.CustomerId=t5.CustomerId "
-                        + "left join (select CustomerId,sum(PricePv) as total from HistoryAwards where IsDeleted=0 and CheckAwardkId=15 ";
-
-                if (pagination.getStartDate() != null) {
-                    query += " and cast(DateCreated as date)>=:startDate";
-                }
-
-                if (pagination.getEndDate() != null) {
-                    query += " and cast(DateCreated as date)<=:endDate";
-                }
-
-                query += " group by CustomerId) t6 on ha.CustomerId=t6.CustomerId "
-                        + "where ha.IsDeleted=0 and c.IsDelete=0 and c.IsActive=1 ";
+                        + "on ha.CustomerId=c.id where ha.IsDeleted=0 and c.IsDelete=0 and c.IsActive=1 ";
                 for (String k : listKeywords) {
                     if (StringUtils.isEmpty(pagination.getSearchString())) {
                         break;
@@ -303,16 +234,16 @@ public class HistoryAwardFacade extends AbstractFacade {
                 if (pagination.getEndDate() != null) {
                     query += " and cast(DateCreated as date)<=:endDate";
                 }
-                
-                if (pagination.getAgencyId()!= null) {
+
+                if (pagination.getAgencyId() != null) {
                     query += " and c.ProvincialAgencyID=:agencyId";
                 }
-                
-                query += " group by ha.CustomerId,c.firstName,c.lastName,c.Username,c.peoplesIdentity,c.Email,c.mobile,c.Address,c.TaxCode,c.BillingAddress,t1.total,t2.total,t3.total,t4.total,t5.total,t6.total";
+
+                query += " group by ha.CustomerId,c.lastName,c.Username,c.peoplesIdentity,c.Email,c.mobile,c.Address,c.TaxCode,c.BillingAddress"
+                        + " order by c.peoplesIdentity,c.lastName";
 
                 Query q = session.createSQLQuery(query)
                         .addScalar("customerId", IntegerType.INSTANCE)
-                        .addScalar("firstName", StringType.INSTANCE)
                         .addScalar("lastName", StringType.INSTANCE)
                         .addScalar("userName", StringType.INSTANCE)
                         .addScalar("peoplesIdentity", StringType.INSTANCE)
@@ -321,28 +252,22 @@ public class HistoryAwardFacade extends AbstractFacade {
                         .addScalar("address", StringType.INSTANCE)
                         .addScalar("taxCode", StringType.INSTANCE)
                         .addScalar("billingAddress", StringType.INSTANCE)
-                        .addScalar("total1", BigDecimalType.INSTANCE)
-                        .addScalar("total2", BigDecimalType.INSTANCE)
-                        .addScalar("total3", BigDecimalType.INSTANCE)
-                        .addScalar("total4", BigDecimalType.INSTANCE)
-                        .addScalar("total5", BigDecimalType.INSTANCE)
-                        .addScalar("total6", BigDecimalType.INSTANCE)
-                        .addScalar("total7", BigDecimalType.INSTANCE);
+                        .addScalar("total", BigDecimalType.INSTANCE)
+                        .addScalar("total1", BigDecimalType.INSTANCE);
                 if (pagination.getStartDate() != null) {
                     q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
 
                 if (pagination.getEndDate() != null) {
                     q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
-                }               
-                
-                if (pagination.getAgencyId()!= null) {
+                }
+
+                if (pagination.getAgencyId() != null) {
                     q.setParameter("agencyId", pagination.getAgencyId());
                 }
                 List<String> header = new ArrayList();
                 header.add("ID");
-                header.add("Họ");
-                header.add("Tên");
+                header.add("Họ và tên");
                 header.add("Tên đăng nhập");
                 header.add("CMND");
                 header.add("Email");
@@ -350,22 +275,14 @@ public class HistoryAwardFacade extends AbstractFacade {
                 header.add("Địa chỉ liên hệ");
                 header.add("Số TK ngân hàng");
                 header.add("Địa chỉ ngân hàng");
-                List<CheckAwards> list = new CheckAwardsFacade().findAll();
-                for (CheckAwards ca : list) {
-                    header.add(ca.getName());
-                }
-                header.add("Tổng thưởng");
+                header.add("Tổng hoa hồng trước thuế");
+                header.add("Tổng hoa hồng sau thuế");
                 file.setTitles(header);
                 List rs = q.list();
                 for (Object rows : rs) {
                     Object[] row = (Object[]) rows;
+                    row[9] = CustomFunction.formatCurrency((BigDecimal) row[9]);
                     row[10] = CustomFunction.formatCurrency((BigDecimal) row[10]);
-                    row[11] = CustomFunction.formatCurrency((BigDecimal) row[11]);
-                    row[12] = CustomFunction.formatCurrency((BigDecimal) row[12]);
-                    row[13] = CustomFunction.formatCurrency((BigDecimal) row[13]);
-                    row[14] = CustomFunction.formatCurrency((BigDecimal) row[14]);
-                    row[15] = CustomFunction.formatCurrency((BigDecimal) row[15]);
-                    row[16] = CustomFunction.formatCurrency((BigDecimal) row[16]);
                 }
                 file.setContents(rs);
                 file.setFileName("Thong ke hoa hong NPP " + pagination.getMonth().toString() + "-" + pagination.getYear().toString());
@@ -822,16 +739,16 @@ public class HistoryAwardFacade extends AbstractFacade {
             HibernateConfiguration.getInstance().closeSession(session);
         }
     }
-    
-    public List reportAllTotalAwardForCustomer(Integer cusId){
+
+    public List reportAllTotalAwardForCustomer(Integer cusId) {
         Session session = null;
-        List list=null;
+        List list = null;
         try {
             session = HibernateConfiguration.getInstance().openSession();
             if (session != null) {
                 Query q = session.createSQLQuery("ReportAllTotalAwardForCustomer :cusid").addScalar("id", IntegerType.INSTANCE).addScalar("Name", StringType.INSTANCE).addScalar("Total", BigDecimalType.INSTANCE);
                 q.setParameter("cusid", cusId);
-                list=q.list();
+                list = q.list();
             }
         } catch (Exception e) {
             Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
@@ -923,6 +840,22 @@ public class HistoryAwardFacade extends AbstractFacade {
             HibernateConfiguration.getInstance().closeSession(session);
         }
         return result;
+    }
+
+    public BigDecimal getSystemAwards(String peoplesIdentity) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                Query q = session.createSQLQuery("GetSystemAwards :peoplesIdentity").setParameter("peoplesIdentity", peoplesIdentity);
+                return (BigDecimal) q.uniqueResult();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+        return BigDecimal.ZERO;
     }
 
     @Override

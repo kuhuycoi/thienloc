@@ -29,7 +29,7 @@
 
                     <div><strong>Chi nhánh Hà Nội:</strong> Số 14, khu C, Phú Mỹ, Mỹ Đình đường Nguyễn Hoàng, Nam Từ Liêm, Hà Nội</div>
 
-                    <div>Điện thoại: 04 3311 6666</div>
+                    <div>Điện thoại: (04).33111.666</div>
                 </div>
             </div>        
         </div>

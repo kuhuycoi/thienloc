@@ -676,6 +676,16 @@ public class CustomerFacade extends AbstractFacade {
             if (checkPeopleIdentity == 0) {
                 return 7;
             }
+            if (checkPeopleIdentity == 2) {
+                return 8;
+            }
+            Query q = session.createSQLQuery("Check_systemin :parendId,:peoplesIdentity");
+            q.setParameter("parendId", distributorParent.getId());
+            q.setParameter("peoplesIdentity", customerNonActive.getPeoplesIdentity());
+            if ((Integer) q.uniqueResult() == 0) {
+                return 9;
+            }
+
             Customer c = new Customer();
             c.setLastName(StringUtils.escapeHtmlEntity(customerNonActive.getLastName()));
             c.setCustomerByParentId(new Customer(distributorParent.getId()));
@@ -704,7 +714,7 @@ public class CustomerFacade extends AbstractFacade {
             if (customerNonActive.getIsActive() != null && customerNonActive.getIsActive()) {
                 activeCustomer(c.getId());
             }
-            result = 8;
+            result = 10;
             trans.commit();
         } catch (Exception e) {
             try {

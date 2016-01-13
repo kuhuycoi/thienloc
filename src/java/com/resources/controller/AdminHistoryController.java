@@ -1,6 +1,7 @@
 package com.resources.controller;
 
 import com.google.gson.Gson;
+import com.resources.bean.ExcelFile;
 import com.resources.entity.Customer;
 import com.resources.entity.RankCustomes;
 import com.resources.facade.AdminFacade;
@@ -194,6 +195,16 @@ public class AdminHistoryController {
                 return mAV;
             }
         }
+    }
+
+    @RequestMapping(value = "/CustomerRankCustomer/Export", method = RequestMethod.GET)
+    public ModelAndView exportComissionDistributorView(HttpSession session) {
+        HistoryPagination customerRankCustomerPagination = (HistoryPagination) session.getAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION");
+        ExcelFile file = new ExcelFile();
+        Integer roleId = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        Integer agencyId = new AdminFacade().getAdminAgencyByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        new CustomerRankCustomerFacade().setExportCustomerRankCustomerFile(file, customerRankCustomerPagination, roleId, agencyId);
+        return new ModelAndView("ExcelView", "myModel", file);
     }
 
     //Award  

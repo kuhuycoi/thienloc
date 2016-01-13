@@ -2,7 +2,6 @@ package com.resources.bean;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
@@ -40,6 +39,7 @@ public class CustomerFromTotalParent implements Serializable {
     private BigDecimal PVANow;
     private BigDecimal PVBNow;
     private Integer CurrentCircle;
+    private Integer levelCusRef;
 
     public CustomerFromTotalParent() {
     }
@@ -282,5 +282,13 @@ public class CustomerFromTotalParent implements Serializable {
 
     public void setCustomerIDCRM(String CustomerIDCRM) {
         this.CustomerIDCRM = CustomerIDCRM;
+    }
+
+    public Integer getLevelCusRef() {
+        return levelCusRef;
+    }
+
+    public void setLevelCusRef(Integer levelCusRef) {
+        this.levelCusRef = levelCusRef;
     }
 }

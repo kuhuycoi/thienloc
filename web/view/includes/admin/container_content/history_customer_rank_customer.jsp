@@ -38,7 +38,7 @@
                                     <li><a><label><input type="checkbox" value="cus1_.lastName" />Tên NPP</label></a></li>
                                     <li><a><label><input type="checkbox" value="cus1_.userName" checked />Username NPP</label></a></li>
                                     <li><a><label><input type="checkbox" value="cus1_.peoplesIdentity" />Số CMND</label></a></li>
-                                    <li><a><label><input type="checkbox" value="this_.dateCreated"  />Thời gian nạp</label></a></li>
+                                    <li><a><label><input type="checkbox" value="this_.dateCreated" />Thời gian nạp</label></a></li>
                                     <li class="divider"></li>
                                     <li><a><label><input class="select-all" type="checkbox" />Tất Cả</label></a></li>
                                 </ul>
@@ -51,6 +51,15 @@
                             </div>
                         </div>
                     </form>
+                    <ul class="nav navbar-nav navbar-right">
+                        <c:if test="${PAGINATION.exportable}">
+                            <li>
+                                <a class="btn btn-default btn-sm" href='<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.EXPORT}/"/>'>
+                                    Xuất Excel<i class="fa fa-download"></i>
+                                </a>
+                            </li>
+                        </c:if>
+                    </ul>
                     <c:if test="${ROLE==1}">
                         <ul class="nav navbar-nav navbar-right">
                             <li><a href="#" class="btn-sm btn btn-default btn-open-modal" controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_INSERT}'/>">Nạp PV <i class="fa fa-user-plus"></i></a></li>

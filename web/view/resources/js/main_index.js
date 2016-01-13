@@ -83,7 +83,7 @@ $(document).ready(function () {
     $('.date-mask').mask('00/00/0000', {selectOnFocus: true});
     $(document).on('submit', '.form-insert-normal', function (e) {
         e.preventDefault();
-        var error = $(this).validate();
+        var error = $(this). validate();
         if (error) {
             return;
         }
@@ -778,7 +778,15 @@ $.fn.validate = function () {
     $.each($(this).find('.form-control:not(.external),input[type="checkbox"]'), function () {
         $(this).removeClass('error');
         if ($(this).is('.form-control:not(.external)')) {
-            if ($(this).attr('required') && $(this).val().trim().length === 0) {
+            if($(this).is('select')&& $(this).val()===''){
+                $(this).addClass('error');
+                props['data-original-title'] = msg['required'];
+                if ($(this).attr('data-original-title-required')) {
+                    props['data-original-title'] = $(this).attr('data-original-title-required');
+                }
+                $(this).attr(props);
+                error = true;
+            } else if ($(this).attr('required') && $(this).val().trim().length === 0) {
                 $(this).addClass('error');
                 props['data-original-title'] = msg['required'];
                 if ($(this).attr('data-original-title-required')) {

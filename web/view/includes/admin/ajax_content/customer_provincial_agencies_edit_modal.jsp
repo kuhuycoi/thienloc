@@ -7,7 +7,7 @@
             <div class="modal-header">
                 <div class="modal-title">
                     <div class="content-title">
-                        <h3 class="text-center">Cập nhật đại lý</h3>
+                        <h3 class="text-center">Đại lý nhận hoa hồng</h3>
                     </div>
                 </div>
             </div>

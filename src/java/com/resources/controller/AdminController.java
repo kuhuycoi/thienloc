@@ -1,9 +1,6 @@
 package com.resources.controller;
 
 import com.resources.facade.AdminFacade;
-import com.resources.facade.CustomerFacade;
-import com.resources.facade.CustomerRankCustomerFacade;
-import com.resources.facade.HistoryAwardFacade;
 import com.resources.entity.Admin;
 import com.resources.function.CustomFunction;
 import com.resources.pagination.admin.DefaultAdminPagination;
@@ -11,7 +8,6 @@ import com.resources.pagination.admin.MessagePagination;
 import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
-import java.util.Calendar;
 import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -30,21 +26,21 @@ public class AdminController {
 
     @RequestMapping(value = {""}, method = RequestMethod.GET)
     public ModelAndView getHomeView(ModelMap mm) {
-        mm.put("HISTORY_AWARD_MAP", new HistoryAwardFacade().reportAllAwardByMonth(Calendar.getInstance().get(Calendar.YEAR)));
-        mm.put("HISTORY_COMISSION_MAP", new HistoryAwardFacade().reportAllComissionByMonth(Calendar.getInstance().get(Calendar.YEAR)));
-        mm.put("HISTORY_TOTAL_AWARD_YEAR", new HistoryAwardFacade().reportAllTotalAwardInCurrentYear());
-        mm.put("TOTAL_IN_CURRENT_MONTH", new HistoryAwardFacade().getTotalInInCurrentMonth());
-        mm.put("TOTAL_IN_CURRENT_YEAR", new HistoryAwardFacade().getTotalInInCurrentYear());
-        mm.put("TOTAL_OUT_CURRENT_MONTH", new HistoryAwardFacade().getTotalOutInCurrentMonth());
-        mm.put("TOTAL_OUT_CURRENT_YEAR", new HistoryAwardFacade().getTotalOutInCurrentYear());
-        mm.put("TOTAL_USER_CURRENT_MONTH", new HistoryAwardFacade().countNewUserInCurrentMonth());
-        mm.put("NEWEST_DEPOSIT", new CustomerRankCustomerFacade().getNewestDeposit());
-        mm.put("NEWEST_AWARD", new CustomerRankCustomerFacade().getNewestAward());
-        mm.put("NEWEST_USER", new CustomerFacade().getNewestUser());
-        mm.put("TOP_5_DEPOSIT_MONTH", new CustomerRankCustomerFacade().getTop5DepositPVInMonth());
-        mm.put("TOP_5_DEPOSIT_YEAR", new CustomerRankCustomerFacade().getTop5DepositPVInYear());
-        mm.put("TOP_5_AWARD_MONTH", new HistoryAwardFacade().getTop5AwardInMonth());
-        mm.put("TOP_5_AWARD_YEAR", new HistoryAwardFacade().getTop5AwardInYear());
+//        mm.put("HISTORY_AWARD_MAP", new HistoryAwardFacade().reportAllAwardByMonth(Calendar.getInstance().get(Calendar.YEAR)));
+//        mm.put("HISTORY_COMISSION_MAP", new HistoryAwardFacade().reportAllComissionByMonth(Calendar.getInstance().get(Calendar.YEAR)));
+//        mm.put("HISTORY_TOTAL_AWARD_YEAR", new HistoryAwardFacade().reportAllTotalAwardInCurrentYear());
+//        mm.put("TOTAL_IN_CURRENT_MONTH", new HistoryAwardFacade().getTotalInInCurrentMonth());
+//        mm.put("TOTAL_IN_CURRENT_YEAR", new HistoryAwardFacade().getTotalInInCurrentYear());
+//        mm.put("TOTAL_OUT_CURRENT_MONTH", new HistoryAwardFacade().getTotalOutInCurrentMonth());
+//        mm.put("TOTAL_OUT_CURRENT_YEAR", new HistoryAwardFacade().getTotalOutInCurrentYear());
+//        mm.put("TOTAL_USER_CURRENT_MONTH", new HistoryAwardFacade().countNewUserInCurrentMonth());
+//        mm.put("NEWEST_DEPOSIT", new CustomerRankCustomerFacade().getNewestDeposit());
+//        mm.put("NEWEST_AWARD", new CustomerRankCustomerFacade().getNewestAward());
+//        mm.put("NEWEST_USER", new CustomerFacade().getNewestUser());
+//        mm.put("TOP_5_DEPOSIT_MONTH", new CustomerRankCustomerFacade().getTop5DepositPVInMonth());
+//        mm.put("TOP_5_DEPOSIT_YEAR", new CustomerRankCustomerFacade().getTop5DepositPVInYear());
+//        mm.put("TOP_5_AWARD_MONTH", new HistoryAwardFacade().getTop5AwardInMonth());
+//        mm.put("TOP_5_AWARD_YEAR", new HistoryAwardFacade().getTop5AwardInYear());
         return new ModelAndView("admin");
     }
 

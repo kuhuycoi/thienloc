@@ -494,11 +494,21 @@ public class AdminCustomerController {
                 return mAV;
             }
             case 7: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chứng minh thư và người giới thiệu không khớp!");
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Không chọn đúng mã chủ!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             case 8: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Không được sử dụng số CMND của mã chủ!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 9: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 10: {
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Đăng ký thành công, Username: " + customerNonActive.getUserName() + "!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;

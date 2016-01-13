@@ -78,10 +78,11 @@
             </div>  
             <div class="row">
                 <div class="col-xs-2">
-                    <label>Đại lý</label>
+                    <label>Đại lý *</label>
                 </div>
                 <div class="col-xs-10">                   
-                    <select name="provinceAgencyId" class="form-control">
+                    <select name="provinceAgencyId" required class="form-control">
+                        <option value=''>-- Lựa chọn Đại lý --</option>
                         <c:forEach items="${f:findAllAvailableProvincialAgencies()}" var="provincialAgency">
                             <option value='${provincialAgency.id}'>${provincialAgency.name}</option>
                         </c:forEach>

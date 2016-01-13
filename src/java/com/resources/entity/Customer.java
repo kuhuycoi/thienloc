@@ -52,6 +52,7 @@ public class Customer implements java.io.Serializable {
     private String passwordSalt;
     private String mobile;
     private String address;
+    private Integer levelCusRef;
     private Boolean isAddress;
     private String addressCompany;
     private String lastIpAddress;
@@ -626,12 +627,21 @@ public class Customer implements java.io.Serializable {
         this.isAccountantApproved = isAccountantApproved;
     }
 
-    @Column(name = "[IsDeposited]", insertable = false,updatable = false)
+    @Column(name = "[IsDeposited]", insertable = false, updatable = false)
     public Boolean getIsDeposited() {
         return isDeposited;
     }
 
     public void setIsDeposited(Boolean isDeposited) {
         this.isDeposited = isDeposited;
+    }
+
+    @Column(name = "levelCusRef", insertable = false, updatable = false)
+    public Integer getLevelCusRef() {
+        return levelCusRef;
+    }
+
+    public void setLevelCusRef(Integer levelCusRef) {
+        this.levelCusRef = levelCusRef;
     }
 }

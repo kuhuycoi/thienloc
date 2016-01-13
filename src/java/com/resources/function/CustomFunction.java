@@ -189,9 +189,9 @@ public class CustomFunction {
             String popOver = "<span class='popover-dismiss' data-toggle='popover' data-placement='right' data-title='" + c.getName() + "' ";
             popOver += "data-content='<b>Username:</b> " + c.getUserName() + "<br/>"
                     + "<b>Chức vụ:</b> " + c.getLevelName() + "</br>"
-                    + "<b>Chu kỳ:</b> " + c.getCircle() + "</br>"
-                    + "<b>Nhánh trái:</b> " + formatCurrency(c.getpVLeft()) + "<br/>"
-                    + "<b>Nhánh phải:</b> " + formatCurrency(c.getpVRight()) + "'>";
+                    + "<b>Chu kỳ:</b> " + c.getCircle() + "</br>";
+                    //+ "<b>Nhánh trái:</b> " + formatCurrency(c.getpVLeft()) + "<br/>" TODO: lam chuc nang nay sau
+                    //+ "<b>Nhánh phải:</b> " + formatCurrency(c.getpVRight()) + "'>";
             if (c.getTotalChildren() > 0) {
                 if (c.getRelativeLevel() == 6) {
                     sB.append("<li class='next-item'><a>");
@@ -296,6 +296,10 @@ public class CustomFunction {
     
     public static List reportAllTotalAwardByMonthForCustomer(Integer cusId){
         return new HistoryAwardFacade().reportAllTotalAwardForCustomer(cusId);
+    }
+    
+    public static BigDecimal getSystemAwards(String peoplesIdentity){
+        return new HistoryAwardFacade().getSystemAwards(peoplesIdentity);
     }
 
     public static String md5(String input) {
