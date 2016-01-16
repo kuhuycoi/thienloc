@@ -168,7 +168,8 @@ public class CustomerFacade extends AbstractFacade {
                         .add(Projections.property("customerId.userName"), "customerName")
                         .add(Projections.property("rankNow.levelId"), "rankNow")
                         .add(Projections.property("rankNow.levelId"), "rankNow")
-                        .add(Projections.property("rankCustomerId.name"), "rankCustomerName"))
+                        .add(Projections.property("rankCustomerId.name"), "rankCustomerName")
+                        .add(Projections.property("isLock"), "isLock"))
                         .setResultTransformer(Transformers.aliasToBean(CustomerDistributor.class));
                 cr.setFirstResult(customerPagination.getFirstResult());
                 cr.setMaxResults(customerPagination.getDisplayPerPage());
@@ -1059,8 +1060,7 @@ public class CustomerFacade extends AbstractFacade {
         Session session = null;
         try {
             session = HibernateConfiguration.getInstance().openSession();
-            Criteria cr = session.createCriteria(Customer.class
-            );
+            Criteria cr = session.createCriteria(Customer.class);
             cr.add(Restrictions.or(Restrictions.eq("userName", cus.getUserName()), Restrictions.eq("title", cus.getUserName())));
             cr.add(Restrictions.not(Restrictions.eq("id", 0)));
             cr.add(Restrictions.eq("password", cus.getPassword()));

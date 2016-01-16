@@ -4,7 +4,7 @@
     <div class="row">
         <div class="img-logo col-xs-4">
             <a href="/trang-chu">
-                <img src="<c:url value='/resources/img/logo.jpg'/>" alt="logo" />
+                <img src="<c:url value='/resources/img/logo2.png'/>" alt="logo" />
             </a>
         </div>
         <c:if test="${sessionScope['CUSTOMER_ID']!=null}">

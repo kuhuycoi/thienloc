@@ -222,5 +222,25 @@
         <name>getSystemAwards</name>
         <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>BigDecimal getSystemAwards(java.lang.String)</function-signature>
-    </function>    
+    </function>   
+    <function>
+        <name>getNewsCategoryDropdown</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>List getNewsCategoryDropdown()</function-signature>
+    </function>        
+    <function>
+        <name>getListPost</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>List getListPost(java.lang.Integer,java.lang.Integer,java.lang.Integer)</function-signature>
+    </function>
+    <function>
+        <name>findAllGalery</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>List findAllGalery()</function-signature>
+    </function>
+    <function>
+        <name>findAllGaleryCategory</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>List findAllGaleryCategory()</function-signature>
+    </function>
 </taglib>

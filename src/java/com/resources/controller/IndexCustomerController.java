@@ -146,6 +146,11 @@ public class IndexCustomerController {
                 mm.put("MESSAGE_PAGINATION", messagePagination);
                 return mAV;
             }
+            if (cus.getIsLock()) {
+                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn đã bị khóa!");
+                mm.put("MESSAGE_PAGINATION", messagePagination);
+                return mAV;
+            }
             request.getSession().setAttribute("CUSTOMER_ID", cus.getId());
             mm.put("REDIRECT_URL", "/trang-chu");
             mAV = new ModelAndView(DefaultIndexPagination.REDIRECT_FOLDER + DefaultIndexPagination.REDIRECT_VIEW);

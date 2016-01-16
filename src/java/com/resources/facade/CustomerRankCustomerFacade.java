@@ -134,7 +134,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
     public int depositPv(String userName, Integer rankCustomerId, Integer multipleGrateful, int adminId) throws Exception {
         Transaction trans = null;
         Session session = null;
-        Integer result = 0;
+        Integer result;
         try {
             if (userName == null || rankCustomerId == null) {
                 return 0;
@@ -145,7 +145,8 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
             Customer c = cFacade.findCustomerByUsername(userName);
             Query q = session.createSQLQuery("DepositPV :userName,:rankCustomerId").setParameter("userName", userName).setParameter("rankCustomerId", rankCustomerId);
 
-            result = (Integer) q.uniqueResult();
+            result = (Integer) q.uniqueResult();      
+
             if (result == 2 && rankCustomerId != 2) {
                 q = session.getNamedQuery("TotalParent");
                 q.setParameter("listCustomerId", c.getListCustomerId())

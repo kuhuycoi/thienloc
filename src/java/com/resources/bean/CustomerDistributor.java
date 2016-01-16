@@ -33,6 +33,7 @@ public class CustomerDistributor implements Serializable {
     private String customerIdcrm;
     private String rankCustomerName;
     private Boolean isAdmin;
+    private Boolean isLock;
 
     public CustomerDistributor(Integer id) {
         this.id = id;
@@ -227,5 +228,13 @@ public class CustomerDistributor implements Serializable {
 
     public void setIsAdmin(Boolean isAdmin) {
         this.isAdmin = isAdmin;
+    }
+
+    public Boolean getIsLock() {
+        return isLock;
+    }
+
+    public void setIsLock(Boolean isLock) {
+        this.isLock = isLock;
     }
 }

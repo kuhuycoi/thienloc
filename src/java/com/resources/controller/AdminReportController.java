@@ -75,13 +75,14 @@ public class AdminReportController {
     @RequestMapping(value = "/ComissionDistributor/ChangeDay/{type}/{day}", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-mm-dd") Date day, HttpSession session) {
-        ReportPagination reportPagination = new ReportPagination("Thống kê hoa hồng nhà phân phối", "cusId", true, "/ComissionDistributor", "/report_commission_distributor");
+        ReportPagination reportPagination = (ReportPagination) session.getAttribute("COMISSION_DISTRIBUTOR_PAGINATION");
         day = "-1".equals(day) ? null : day;
         if (type == 0) {
             reportPagination.setStartDate(day);
         } else {
             reportPagination.setEndDate(day);
         }
+        reportPagination.setCurrentPage(1);
         return comissionDistributorView(reportPagination, session);
     }
 
@@ -89,9 +90,6 @@ public class AdminReportController {
     @ResponseBody
     public ModelAndView changeDayComissionDistributorView(@PathVariable("id") int id, HttpSession session) {
         ReportPagination reportPagination = (ReportPagination) session.getAttribute("COMISSION_DISTRIBUTOR_PAGINATION");
-        if (reportPagination == null) {
-            reportPagination = new ReportPagination("Thống kê hoa hồng nhà phân phối", "cusId", true, "/ComissionDistributor", "/report_commission_distributor");
-        }
         if (id == -1) {
             reportPagination.setAgencyId(null);
         } else {
@@ -101,6 +99,7 @@ public class AdminReportController {
         if (admin.getRoleAdmID().getId() == 2 && admin.getProvincialAgencyID().getId() != 0) {
             reportPagination.setAgencyId(admin.getProvincialAgencyID().getId());
         }
+        reportPagination.setCurrentPage(1);
         return comissionDistributorView(reportPagination, session);
     }
 

@@ -5,8 +5,8 @@
     <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
     <property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
     <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=thienloc_db</property>
-    <property name="hibernate.connection.username">sa</property>
-    <property name="hibernate.connection.password">trung@1234".!</property>
+    <property name="hibernate.connection.username">lab</property>
+    <property name="hibernate.connection.password">123456</property>
     <property name="show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.dialect">org.hibernate.dialect.SQLServer2012Dialect</property>
@@ -44,6 +44,11 @@
     <mapping class="com.resources.entity.Promotion"/>
     <mapping class="com.resources.entity.Action"/>
     <mapping class="com.resources.entity.AdminLogs"/>
+    <mapping class="com.resources.entity.Galery"/>
+    <mapping class="com.resources.entity.Images"/>
+    <mapping class="com.resources.entity.Videos"/>
+    <mapping class="com.resources.entity.News"/>
+    <mapping class="com.resources.entity.NewsCategories"/>
     <mapping class="com.resources.bean.CustomerDistributor"/>
     <mapping class="com.resources.bean.CustomerFromTotalParent"/>
     <mapping class="com.resources.bean.CustomerNonActive"/>

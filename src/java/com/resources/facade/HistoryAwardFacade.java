@@ -25,6 +25,7 @@ import java.util.logging.Logger;
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Order;
 import org.hibernate.criterion.ProjectionList;
@@ -33,6 +34,7 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
 import org.hibernate.type.BigDecimalType;
+import org.hibernate.type.BooleanType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.TimestampType;
@@ -93,7 +95,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                 Criteria cr = session.createCriteria(HistoryAwards.class, "h");
                 cr.createAlias("h.customer", "cus", JoinType.LEFT_OUTER_JOIN);
 
-                cr.add(Restrictions.and(Restrictions.eq("h.isDeleted", false), Restrictions.eq("cus.isDelete", false), Restrictions.eq("cus.isActive", true)));
+                cr.add(Restrictions.and(Restrictions.eq("h.isDeleted", false), 
+                        Restrictions.eq("cus.isDelete", false), 
+                        Restrictions.eq("cus.isActive", true), 
+                        Restrictions.eq("cus.isDeposited", true),
+                        Restrictions.eq("cus.isLock", false)));
 
                 if (pagination.getStartDate() != null) {
                     cr.add(Restrictions.sqlRestriction("DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE));
@@ -137,7 +143,7 @@ public class HistoryAwardFacade extends AbstractFacade {
                     queryString += " and c.ProvincialAgencyID=:agencyId";
                 }
 
-                queryString += " and c.IsDelete=0 and c.IsActive=1 group by h.customerId)z";
+                queryString += " and c.IsDelete=0 and c.IsActive=1 and c.isLock=0 and c.isDeposited=1 group by h.customerId)z";
                 Query q = session.createSQLQuery(queryString);
 
                 if (pagination.getStartDate() != null) {
@@ -172,7 +178,7 @@ public class HistoryAwardFacade extends AbstractFacade {
                     queryString += " and c.ProvincialAgencyID=:agencyId";
                 }
 
-                queryString += " and c.IsDelete=0 and c.IsActive=1";
+                queryString += " and c.IsDelete=0 and c.IsActive=1 and c.isLock=0 and c.isDeposited=1";
                 q = session.createSQLQuery(queryString);
 
                 if (pagination.getStartDate() != null) {
@@ -220,7 +226,8 @@ public class HistoryAwardFacade extends AbstractFacade {
                 String query = "select ha.customerId,c.lastName,c.userName,c.peoplesIdentity,c.email,c.mobile,c.address,c.taxCode,"
                         + "c.billingAddress, isnull(sum(ha.PricePv),0) total, isnull(sum(ha.PricePv),0)*90/100 total1 "
                         + "from HistoryAwards ha left join Customer c "
-                        + "on ha.CustomerId=c.id where ha.IsDeleted=0 and c.IsDelete=0 and c.IsActive=1 ";
+                        + "on ha.CustomerId=c.id where ha.IsDeleted=0 and c.IsDelete=0 and c.IsActive=1 "
+                        + "and c.isLock=0 and c.isDeposited=1";
                 for (String k : listKeywords) {
                     if (StringUtils.isEmpty(pagination.getSearchString())) {
                         break;
@@ -856,6 +863,45 @@ public class HistoryAwardFacade extends AbstractFacade {
             HibernateConfiguration.getInstance().closeSession(session);
         }
         return BigDecimal.ZERO;
+    }
+
+    public Boolean checkHaveAwards(Integer cusId) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                Query q = session.createSQLQuery("if Exists(select * from HistoryAwards where CustomerId=:cusId) begin select 1 as result end else begin select 0 as result end").addScalar("result", BooleanType.INSTANCE).setParameter("cusId", cusId);
+                return (Boolean) q.uniqueResult();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(HistoryAwards.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+        return false;
+    }
+
+    public void showAllHistoryAward(Integer cusId, Integer status) {
+        Session session = null;
+        Transaction trans = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            trans = session.beginTransaction();
+            Query q = session.createSQLQuery("update HistoryAwards set isDeleted=:isDeleted where CustomerId=:cusId").setParameter("cusId", cusId).setParameter("isDeleted", status);
+            q.executeUpdate();
+            trans.commit();
+        } catch (Exception e) {
+            try {
+                if (trans != null) {
+                    trans.rollback();
+                }
+            } catch (Exception ex) {
+                throw ex;
+            }
+            Logger.getLogger(HistoryAwards.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
     }
 
     @Override

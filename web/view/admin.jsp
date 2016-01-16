@@ -78,6 +78,10 @@
         <script src='<c:url value="/resources/js/jquery.mask.min.js"/>'></script>
         <!-- date picker -->
         <script src='<c:url value="/resources/js/bootstrap-datepicker.min.js"/>'></script>
+        <!-- ckeditor -->
+        <script src='<c:url value="/ckeditor/ckeditor.js"/>'/></script>
+        <!-- ckfinder -->
+        <script src='<c:url value="/ckfinder/ckfinder.js"/>'></script>
         <script src='<c:url value="/resources/js/main_admin.js"/>'></script>
     </body>
 </html>

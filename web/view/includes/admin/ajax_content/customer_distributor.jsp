@@ -19,6 +19,7 @@
                 <th class="col-md-1" column="rankNow">Cấp bậc <span class="${PAGINATION.orderColmn=='rankNow'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="parentName">Người chỉ định <span class="${PAGINATION.orderColmn=='parentName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="customerName">Người giới thiệu <span class="${PAGINATION.orderColmn=='customerName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-2" column="isLock">Trạng thái <span class="${PAGINATION.orderColmn=='isLock'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="rankCustomerName">Gói tham gia <span class="${PAGINATION.orderColmn=='rankCustomerName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="th-action external">
                     <div class="btn-group btn-group-sm">
@@ -33,7 +34,7 @@
         </thead>
         <tbody>
             <c:forEach items="${PAGINATION.displayList}" var="distribtor">
-                <tr>
+                <tr ${distribtor.isLock?'class="alert alert-danger"':''}>
                     <td class="text-center"><input type="checkbox" value="${distribtor.id}" /></td>
                     <td class="td-align-center">${distribtor.id}</td>
                     <td>${distribtor.firstName}&nbsp;${distribtor.lastName}</td>
@@ -41,6 +42,7 @@
                     <td>${distribtor.rankNow}</td>
                     <td>${distribtor.parentName}</td>
                     <td>${distribtor.customerName}</td>
+                    <td>${distribtor.isLock?'Khóa':'Không khóa'}</td>
                     <td>${distribtor.rankCustomerName==null?'<i style="color:red">Chưa tham gia</i>':distribtor.rankCustomerName}</td>
                     <td>
                         <div class="btn-group btn-group-sm">
@@ -48,6 +50,7 @@
                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-action" role="menu">
                                 <li><a class="btn-open-modal" controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.VIEW_EDIT}/${distribtor.id}'/>">Sửa</a></li>
                                 <li><a controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.RESET_PASSWORD}/${distribtor.id}'/>">Reset mật khẩu</a></li>
+                                <li><a controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}/Lock/${distribtor.id}'/>">${distribtor.isLock?'Mở khóa':'Khóa'}</a></li>
                                 <li><a controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.DELETE}/${distribtor.id}'/>">Xóa</a></li>
                             </ul>
                         </div>

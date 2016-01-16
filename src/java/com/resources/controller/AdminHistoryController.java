@@ -13,7 +13,6 @@ import com.resources.facade.RankCustomersFacade;
 import com.resources.pagination.admin.HistoryPagination;
 import com.resources.pagination.admin.DefaultAdminPagination;
 import com.resources.pagination.admin.MessagePagination;
-import com.resources.pagination.admin.ReportPagination;
 import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
@@ -99,22 +98,23 @@ public class AdminHistoryController {
     @RequestMapping(value = "/CustomerRankCustomer/ChangeAgency/{agencyId}", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView changeAgencyView(@PathVariable("agencyId") Integer agencyId, HttpSession session) {
-        HistoryPagination customerRankCustomerPagination = new HistoryPagination("Lịch sử nạp PV", "/CustomerRankCustomer", "/history_customer_rank_customer");
+        HistoryPagination customerRankCustomerPagination = (HistoryPagination) session.getAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION");
         customerRankCustomerPagination.setAgencyId(agencyId == -1 ? null : agencyId);
-        session.setAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION", customerRankCustomerPagination);
+        customerRankCustomerPagination.setCurrentPage(1);
         return customerRankCustomerView(customerRankCustomerPagination, session);
     }
 
     @RequestMapping(value = "/CustomerRankCustomer/ChangeDay/{type}/{day}", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-mm-dd") Date day, HttpSession session) {
-        HistoryPagination customerRankCustomerPagination = new HistoryPagination("Lịch sử nạp PV", "/CustomerRankCustomer", "/history_customer_rank_customer");
+        HistoryPagination customerRankCustomerPagination = (HistoryPagination) session.getAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION");
         day = "-1".equals(day) ? null : day;
         if (type == 0) {
             customerRankCustomerPagination.setStartDate(day);
         } else {
             customerRankCustomerPagination.setEndDate(day);
         }
+        customerRankCustomerPagination.setCurrentPage(1);
         return customerRankCustomerView(customerRankCustomerPagination, session);
     }
 
@@ -536,6 +536,7 @@ public class AdminHistoryController {
                 try {
                     result = new CustomerRankCustomerFacade().depositPv(c.getUserName(), c.getRankCustomerId().getId(), 1, (Integer) session.getAttribute("ADMIN_ID"));
                 } catch (Exception ex) {
+                    ex.printStackTrace();
                     mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
                     mm.put("MESSAGE_PAGINATION", mP);
                     return mAV;
@@ -549,6 +550,20 @@ public class AdminHistoryController {
                 return mAV;
             }
             case 2: {
+                Boolean check = new HistoryAwardFacade().checkHaveAwards(id);
+                if (check) {
+                    String content = "Nạp PV thành công!<script>"
+                            + "var confirm1=confirm('NPP này đã có thu nhập trước đó! Hiển thị tất cả?');"
+                            + "if(confirm1){"
+                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/0','GET',null,null);"
+                            + "}else{"
+                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/1','GET',null,null);"
+                            + "}"
+                            + "</script>";
+                    mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", content);
+                    mm.put("MESSAGE_PAGINATION", mP);
+                    return mAV;
+                }
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Nạp PV thành công!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
@@ -564,6 +579,11 @@ public class AdminHistoryController {
                 return mAV;
             }
         }
+    }
+
+    @RequestMapping(value = "/NeverUpRank/ShowAllHistoryAward/{cusId}/{status}", method = RequestMethod.GET)
+    public void showAllHistoryAward(@PathVariable(value = "cusId") Integer cusId, @PathVariable(value = "status") Integer status) {
+        new HistoryAwardFacade().showAllHistoryAward(cusId, status);
     }
 
     @RequestMapping(value = "/NeverUpRank/Insert", method = RequestMethod.POST)

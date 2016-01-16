@@ -30,10 +30,16 @@
             <mvc:exclude-mapping path="/Customer/SearchParentId/**"/>
             <mvc:exclude-mapping path="/Customer/SearchCustomerId/**"/>
             <mvc:exclude-mapping path="/resources/**"/>
+            <mvc:exclude-mapping path="/ckeditor/**"/>
+            <mvc:exclude-mapping path="/ckfinder/**"/>
+            <mvc:exclude-mapping path="/upload/**"/>
             <bean class="com.resources.interceptor.IndexAuthenticationInterceptor"  />
         </mvc:interceptor>
     </mvc:interceptors>
     <mvc:resources mapping="/resources/**" location="/view/resources/" cache-period="31556926" />  
+    <mvc:resources mapping="/ckeditor/**" location="/ckeditor/" cache-period="31556926" />   
+    <mvc:resources mapping="/ckfinder/**" location="/ckfinder/" cache-period="31556926" />   
+    <mvc:resources mapping="/upload/**" location="/upload/" cache-period="31556926" />  
     
     <bean id="matcher" class="com.resources.controller.CaseInsensitivePathMatcher"/>
 

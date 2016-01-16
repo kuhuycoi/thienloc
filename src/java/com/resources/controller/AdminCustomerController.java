@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.resources.facade.CustomerFacade;
 import com.resources.facade.ProvincialAgenciesFacade;
 import com.resources.bean.CustomerNonActive;
+import com.resources.entity.Customer;
 import com.resources.entity.ProvincialAgencies;
 import com.resources.facade.AdminFacade;
 import com.resources.facade.AgencyFacade;
@@ -162,6 +163,32 @@ public class AdminCustomerController {
         session.setAttribute("DISTRIBUTOR_PAGINATION", distributorPagination);
         mm.put("CUSTOMER", new CustomerFacade().findDistributorById(id));
         return new ModelAndView(DefaultAdminPagination.AJAX_FOLDER + distributorPagination.getEditViewName());
+    }
+
+    @RequestMapping(value = "/Distributor/Lock/{id}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView lockDistributor(@PathVariable(value = "id") Integer id, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
+        if (role != 1 && role != 4) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "bạn không đủ quyền để thực hiện hành động này!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        try {
+            Customer cus = (Customer) new CustomerFacade().find(id);
+            cus.setIsLock(!cus.getIsLock());
+            new CustomerFacade().edit(cus);
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "Thành công", cus.getIsLock() ? "Khóa" : "Mở khóa" + " nhà phân phối thành công!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
     }
 
     //Non-active

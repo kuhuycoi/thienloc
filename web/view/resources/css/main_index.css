@@ -178,7 +178,9 @@ input[type="color"],select{background-color: #fff;background-image: none;border-
 #footer .footer-bottom{background-color: #343535;padding: 20px 0;}
 #footer .footer-bottom a{color: #ececec;}
 #footer .footer-bottom a:hover{color: #FFF;}
-
+.news-block-list{
+    margin: 20px;
+}
 .news-block{
 }
 .news-block-title{
@@ -198,10 +200,10 @@ input[type="color"],select{background-color: #fff;background-image: none;border-
     background-color: #eee;
     margin: 5px;
 }
-.news-list>li .fa-star{
+.news-list>li .fa-arrow-circle-right{
     width: 30px;
     height: 30px;
-    background-color: #cc3300;
+    background-color: cadetblue;
     color: #fff;
     display: inline-block;
     line-height: 30px;

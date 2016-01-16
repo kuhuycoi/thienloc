@@ -88,6 +88,7 @@ public class Customer implements java.io.Serializable {
     private RankCustomes rankCustomerId;
     private Boolean isAccountantApproved;
     private Boolean isDeposited;
+    private Boolean isLock;
     private Set<CustomerRankCustomer> customerRankCustomers = new HashSet<>(0);
     private Set<HistoryAwards> historyAwardses = new HashSet<>(0);
     private Set<TransactionHistories> transactionHistorieses = new HashSet<>(0);
@@ -643,5 +644,14 @@ public class Customer implements java.io.Serializable {
 
     public void setLevelCusRef(Integer levelCusRef) {
         this.levelCusRef = levelCusRef;
+    }
+
+    @Column(name = "isLock", insertable = false)
+    public Boolean getIsLock() {
+        return isLock;
+    }
+
+    public void setIsLock(Boolean isLock) {
+        this.isLock = isLock;
     }
 }

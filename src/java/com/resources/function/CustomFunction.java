@@ -15,6 +15,9 @@ import com.resources.entity.ModuleInRole;
 import com.resources.entity.RankNow;
 import com.resources.facade.AdminFacade;
 import com.resources.facade.CheckAwardsFacade;
+import com.resources.facade.GaleryFacade;
+import com.resources.facade.NewsCategoriesFacade;
+import com.resources.facade.NewsFacade;
 import com.resources.facade.PinSysFacade;
 import com.resources.facade.PromotionFacade;
 import com.resources.facade.RoleAdminFacade;
@@ -171,7 +174,7 @@ public class CustomFunction {
 
     public static List<ModuleInRole> filterModuleInRoleList(List<ModuleInRole> moduleInRoles, Integer parentId) {
         return moduleInRoles.stream().filter(m -> {
-            return m.getModuleID().getModule().getId()== parentId;
+            return m.getModuleID().getModule().getId() == parentId;
         }).collect(Collectors.toList());
     }
 
@@ -188,14 +191,15 @@ public class CustomFunction {
         list.stream().forEach((c) -> {
             String popOver = "<span class='popover-dismiss' data-toggle='popover' data-placement='right' data-title='" + c.getName() + "' ";
             popOver += "data-content='<b>Username:</b> " + c.getUserName() + "<br/>"
-                    + "<b>Chức vụ:</b> " + c.getLevelName() + "</br>"
-                    + "<b>Chu kỳ:</b> " + c.getCircle() + "</br>";
-                    //+ "<b>Nhánh trái:</b> " + formatCurrency(c.getpVLeft()) + "<br/>" TODO: lam chuc nang nay sau
-                    //+ "<b>Nhánh phải:</b> " + formatCurrency(c.getpVRight()) + "'>";
+                    + "<b>Chức vụ:</b> " + c.getLevelName() + "</br>" + "'>";
+//                    + "<b>Chu kỳ:</b> " + c.getCircle() + "</br>"
+//                    + "<b>Nhánh trái:</b> " + formatCurrency(c.getpVLeft()) + "<br/>"
+//                    + "<b>Nhánh phải:</b> " + formatCurrency(c.getpVRight()) + "'>";
             if (c.getTotalChildren() > 0) {
                 if (c.getRelativeLevel() == 6) {
                     sB.append("<li class='next-item'><a>");
-                    sB.append("<span class='fa fa-plus-square-o' controller='" + rootController + "/Next/");
+                    sB.append("<span class='fa fa-plus-square-o' controller='")
+                            .append(rootController).append("/Next/");
                     sB.append(c.getKey());
                     sB.append("/");
                     sB.append(c.getKey());
@@ -288,18 +292,34 @@ public class CustomFunction {
 
     public static List findAllAvailableRoleAdmin() {
         return new RoleAdminFacade().findAll();
-    }   
+    }
 
     public static Integer getAdminRoleByAdminId(Integer adminId) {
         return new AdminFacade().getAdminRoleByAdminId(adminId);
     }
-    
-    public static List reportAllTotalAwardByMonthForCustomer(Integer cusId){
+
+    public static List reportAllTotalAwardByMonthForCustomer(Integer cusId) {
         return new HistoryAwardFacade().reportAllTotalAwardForCustomer(cusId);
     }
-    
-    public static BigDecimal getSystemAwards(String peoplesIdentity){
+
+    public static BigDecimal getSystemAwards(String peoplesIdentity) {
         return new HistoryAwardFacade().getSystemAwards(peoplesIdentity);
+    }
+
+    public static List getNewsCategoryDropdown() {
+        return new NewsCategoriesFacade().getTreeDropdown();
+    }
+
+    public static List getListPost(Integer caId, Integer firstResult, Integer totalResult) {
+        return new NewsFacade().getListPost(caId, firstResult, totalResult);
+    }
+    
+    public static List findAllGalery() {
+        return new GaleryFacade().findAll();
+    }
+
+    public static List findAllGaleryCategory() {
+        return new GaleryFacade().findAll();
     }
 
     public static String md5(String input) {

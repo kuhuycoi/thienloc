@@ -11,21 +11,27 @@
     <div class="center" style="margin-top: 20px">
         <h2 style="color: #fff; font-style: italic">Hiện tại hệ thống đang có một số mã bị lỗi, bạn vui lòng click vào <a href="<c:url value="/resources/file/report.xlsx"/>" style="color: #3498db">đây</a> để kiểm tra và chỉnh sửa lại.<br/></h2>
     </div>
-</div>--%>
+    <div style="color: #fff;margin-bottom: 20px;background-color: #993300;padding: 30px 15px">
+        <h1 style="text-transform: uppercase;text-align: center;color: yellow">Thông báo!</h1>
+        <p style="line-height: 24px;text-align: justify; color: #fff;font-size: 20px">
+            Vì lý do web đồng bộ mấy ngày vừa qua nên có một số NPP tích luỹ mức Đồng hay Bạc nhưng vẫn không được chia phần trăm Khuyến Mại. Vì vậy để công bằng cho NPP công ty đã đồng bộ lại toàn bộ những khoản hoa hồng để chia đều cho những NPP chưa được nhận hoa hồng mấy ngày qua.vì vậy những NPP được chia hoa hồng trước đó sẽ bị giảm hoa hồng của mình.
+            <br><br>Trân trọng!</p>
+    </div>
+</div>--%>  
 <div class="news-block-list">
     <div class="row">
         <div class="col-sm-6 col-xs-12">
             <div class="news-block">
                 <div class="news-block-title">
-                    <h3><i class="fa fa-info"></i> Tin giới thiệu</h3>
+                    <h3 style="font-weight:700; color:#2c87f0;"><i class="fa fa-info"></i> Tin giới thiệu</h3>
                 </div>
                 <ul class="news-list">
-                    <li><i class="fa fa-star"></i><a href="">Giới thiệu chung</a></li>
-                    <li><i class="fa fa-star"></i><a href="">Các mốc thời gian</a></li>
-                    <li><i class="fa fa-star"></i><a href="">Sơ đồ cơ cấu tổ chức</a></li>
-                    <li><i class="fa fa-star"></i><a href="">Mục tiêu phát triển</a></li>
-                    <li><i class="fa fa-star"></i><a href="">Tầm nhìn sứ mệnh</a></li>
-                    <li><i class="fa fa-star"></i><a href="">Thành tích đạt được</a></li>
+                    <c:set value="${f:getListPost(1,0,3)}" var="newsList" />
+                    <c:forEach items="${newsList}" var="news">
+                        <li>
+                            <i class="fa fa-arrow-circle-right"></i><a href="<c:url value="/tin-tuc/${news.caId.id}/${news.seoPermalink}"/>" title="${news.seoTitle}">${news.name}</a>
+                        </li>
+                    </c:forEach>
                     <li class="btn-read-all"><a href="">Xem tất cả..</a></li>
                 </ul>
             </div>
@@ -33,27 +39,22 @@
         <div class="col-sm-6 col-xs-12">
             <div class="news-block">
                 <div class="news-block-title">
-                    <h3><i class="fa fa-calendar"></i> Thông báo - Lịch công tác</h3>
+                    <h3 style="font-weight:700; color:#2c87f0;"><i class="fa fa-calendar"></i> Thông báo <img src="/resources/img/icon_new.gif"></h3>
                 </div>
                 <ul class="news-list">
                     <ul class="news-list">
-                        <li><i class="fa fa-star"></i><a href="">Thông báo thời gian đăng ký NPP miễn phí</a></li>
-                        <li><i class="fa fa-star"></i><a href="">Quy định, cơ chế hoạt động của công ty</a></li>
-                        <li><i class="fa fa-star"></i><a href="">Danh sách các mã bị lỗi</a></li>
-                        <li><i class="fa fa-star"></i><a href="">THÔNG BÁO LỊCH ĐÀO TẠO</a></li>
-                        <li><i class="fa fa-star"></i><a href="">Lịch làm việc 12/2015</a></li>
+                        <c:set value="${f:getListPost(2,0,3)}" var="newsList" />
+                        <c:forEach items="${newsList}" var="news">
+                            <li>
+                                <i class="fa fa-arrow-circle-right"></i><a href="<c:url value="/tin-tuc/${news.caId.id}/${news.seoPermalink}"/>" title="${news.seoTitle}">${news.name}</a>
+                            </li>
+                        </c:forEach>
                         <li class="btn-read-all"><a href="">Xem tất cả..</a></li>
                     </ul>
                 </ul>
             </div>
         </div>
-    </div>   
-	<div style="color: #fff;margin-bottom: 20px;background-color: #993300;padding: 30px 15px">
-		<h1 style="text-transform: uppercase;text-align: center;color: yellow">Thông báo!</h1>
-		<p style="line-height: 24px;text-align: justify; color: #fff;font-size: 20px">
-			Vì lý do web đồng bộ mấy ngày vừa qua nên có một số NPP tích luỹ mức Đồng hay Bạc nhưng vẫn không được chia phần trăm Khuyến Mại. Vì vậy để công bằng cho NPP công ty đã đồng bộ lại toàn bộ những khoản hoa hồng để chia đều cho những NPP chưa được nhận hoa hồng mấy ngày qua.vì vậy những NPP được chia hoa hồng trước đó sẽ bị giảm hoa hồng của mình.
-			<br><br>Trân trọng!</p>
-	</div>
+    </div>
     <%--
     <div class="row" style="margin-top: 20px;">
         <div class="col-xs-12">
@@ -61,7 +62,7 @@
         </div>
     </div>
     --%>
-</div>
+</div> 
 <%--<ul class="slider">
     <li>
         <a href="<c:url value="/resources/img/IMG_4338.PNG"/>" class="zoom" title="Giấy chứng nhận đăng ký doanh nghiệp công ty cổ phần">
