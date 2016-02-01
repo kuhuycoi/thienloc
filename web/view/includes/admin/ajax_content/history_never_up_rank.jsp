@@ -113,7 +113,7 @@
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="ti-settings"></i></button>
                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-action" role="menu">
                                 <li>
-                                    <a controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}/NeverUpRank/Insert/${cus.id}'/>">Nạp tiền</a>
+                                    <a class="custom-confirm" controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}/NeverUpRank/Insert/${cus.id}'/>">Nạp tiền</a>
                                 </li>
                                 <li>
                                     <a controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}/NeverUpRank/Deny/${cus.id}'/>">Báo lỗi</a>

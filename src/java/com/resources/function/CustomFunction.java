@@ -21,11 +21,13 @@ import com.resources.facade.NewsFacade;
 import com.resources.facade.PinSysFacade;
 import com.resources.facade.PromotionFacade;
 import com.resources.facade.RoleAdminFacade;
+import com.resources.utils.ConfigUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
@@ -35,6 +37,7 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
+import javax.servlet.http.HttpServletRequest;
 
 public class CustomFunction {
 
@@ -313,13 +316,34 @@ public class CustomFunction {
     public static List getListPost(Integer caId, Integer firstResult, Integer totalResult) {
         return new NewsFacade().getListPost(caId, firstResult, totalResult);
     }
-    
+
     public static List findAllGalery() {
         return new GaleryFacade().findAll();
     }
 
     public static List findAllGaleryCategory() {
         return new GaleryFacade().findAll();
+    }
+
+    public static Boolean checkTrianTime(String propertiesFilePath, Date checkTime) throws ParseException {
+        String trianStartTime = ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.start");
+        String trianFinishTime = ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.finish");
+        if (checkTime == null || trianStartTime == null || trianFinishTime == null) {
+            return false;
+        }
+        SimpleDateFormat sDF = new SimpleDateFormat("dd/mm/yyyy");
+        Date startTime = sDF.parse(trianStartTime);
+        Date finishTime = sDF.parse(trianFinishTime);
+        checkTime = sDF.parse(sDF.format(checkTime));
+        if (checkTime.compareTo(startTime) >= 0 && checkTime.compareTo(finishTime) <= 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public static Long getTrianTime(String propertiesFilePath) throws ParseException {
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.exacly")).getTime();
     }
 
     public static String md5(String input) {

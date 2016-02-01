@@ -448,13 +448,20 @@ $(document).ready(function () {
     $(document).on('mousedown', '.dropdown-menu-action li a:not(.external):not(.btn-open-modal)', function (e) {
         e.stopPropagation();
         var url = $(this).attr('controller');
-        if (confirm('Bạn chắc chắn thực hiện hành động này?')) {
-            sendAjax(url, 'GET', null, function (data) {
-                openMessage(data, function () {
-                    reloadAjaxContent()
-                });
-            });
+        if (!$(this).hasClass('custom-confirm')) {
+            if (!confirm('Bạn chắc chắn thực hiện hành động này?')) {
+                return;
+            }
         }
+        sendAjax(url, 'GET', null, function (data) {
+            if (!$(this).hasClass('custom-confirm')) {
+                openMessage(data, function () {
+                    reloadAjaxContent();
+                });
+            } else {
+                $('body').append(data);
+            }
+        });
     });
     /*Reload button*/
     $(document).on('click', '.btn-reload-content', function () {
@@ -668,7 +675,7 @@ function sendAjaxNormal(url, type, data, handle) {
 var intervalDisplayMessage;
 function openMessage(data, callback) {
     clearInterval(intervalDisplayMessage);
-    $('#message').remove();
+    $('#message,.modal').remove();
     if (typeof data !== "undefined") {
         $('body').append(data);
     }
@@ -1035,4 +1042,28 @@ function RemoveUnicode(str) {
     str = str.replace(/-+-/g, "-"); //thay thế 2- thành 1- 
     str = str.replace(/^\-+|\-+$/g, "");
     return str;
+}
+function confirmDialog(title, message, function1, function2) {
+    BootstrapDialog.show({
+        title: title,
+        message: message,
+        buttons: [{
+                label: 'Có',
+                cssClass: 'btn-primary',
+                action: function () {
+                    function1();
+                }
+            }, {
+                label: 'Không',
+                cssClass: 'btn-danger',
+                action: function () {
+                    function2();
+                }
+            }, {
+                label: 'Hủy',
+                action: function (dialogItself) {
+                    dialogItself.close();
+                }
+            }]
+    });
 }

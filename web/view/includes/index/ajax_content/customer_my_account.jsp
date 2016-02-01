@@ -20,7 +20,7 @@
                 <td>${RANKNOW.levelId}</td>
             </tr>
             <tr>
-                <td>Gói tham gia</td>
+                <td>Mức tích lũy</td>
                 <td>${CUSTOMER.rankCustomerName!=null&&CUSTOMER.isDeposited?CUSTOMER.rankCustomerName:'<i style="color:red">NPP</i>'}</td>
             </tr>
             <tr>

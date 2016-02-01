@@ -19,7 +19,7 @@ public class CustomerNonActive implements Serializable {
     private String customerName;
     private String peoplesIdentity;
     private Date createdOnUtc;
-    private Date birthday;
+    private String birthday;
     private String mobile;
     private String address;
     private Integer customerTypeId;
@@ -238,11 +238,11 @@ public class CustomerNonActive implements Serializable {
         this.lastActivityDateUtc = lastActivityDateUtc;
     }
 
-    public Date getBirthday() {
+    public String getBirthday() {
         return birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 

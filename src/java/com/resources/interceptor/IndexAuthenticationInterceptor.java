@@ -19,7 +19,7 @@ public class IndexAuthenticationInterceptor extends HandlerInterceptorAdapter {
             response.getWriter().write("<script>window.location.href='" + rootContext + "/dang-nhap'</script>");
             return false;
         }
-        
+
         if ((sessionObj != null && uri.endsWith("/logout")) || (sessionObj != null && uri.endsWith("/thoat"))) {
             request.getSession(false).invalidate();
             response.getWriter().write("<script>window.location.href='" + rootContext + "/dang-nhap'</script>");
@@ -28,7 +28,6 @@ public class IndexAuthenticationInterceptor extends HandlerInterceptorAdapter {
         if ((sessionObj != null && uri.endsWith("/dang-nhap")) || (sessionObj != null && uri.endsWith("/dang-ky"))
                 || (sessionObj != null && uri.endsWith("/Login")) || (sessionObj != null && uri.endsWith("/Register"))) {
             response.getWriter().write("<script>window.location.href='" + rootContext + "/trang-chu'</script>");
-            return false;
         }
         return true;
     }

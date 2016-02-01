@@ -7,6 +7,7 @@ public class GeneralContextListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        sce.getServletContext().setAttribute("MAIN_PROPERTIES_FILE_PATH", sce.getServletContext().getRealPath("/WEB-INF/Config.properties"));
     }
 
     @Override

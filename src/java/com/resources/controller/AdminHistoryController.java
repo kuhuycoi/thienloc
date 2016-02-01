@@ -426,9 +426,7 @@ public class AdminHistoryController {
             Customer c = (Customer) new CustomerFacade().find(id);
             if (c.getRankCustomerId() != null) {
                 c.setIsAdmin(true);
-                if (role == 4) {
-                    c.setIsAccountantApproved(false);
-                }
+                c.setIsAccountantApproved(false);
                 try {
                     new CustomerFacade().edit(c);
                 } catch (Exception ex) {
@@ -533,57 +531,108 @@ public class AdminHistoryController {
         if (role == 4) {
             Customer c = (Customer) new CustomerFacade().find(id);
             if (c.getRankCustomerId() != null && c.getIsAccountantApproved()) {
-                try {
-                    result = new CustomerRankCustomerFacade().depositPv(c.getUserName(), c.getRankCustomerId().getId(), 1, (Integer) session.getAttribute("ADMIN_ID"));
-                } catch (Exception ex) {
-                    ex.printStackTrace();
+                Boolean check = new HistoryAwardFacade().checkHaveAwards(id);
+                if (check) {
+                    String content = "<script>"
+                            + "confirmDialog('Xác nhận','NPP này đã có thu nhập trước đó! Chọn \"Có\" nếu bạn muốn hiển thị tất cả!,\"Không\" nếu muốn ẩn tất cả, \"Hủy\" nếu muốn hủy bỏ hành động nạp tiền!',"
+                            + "function(){"
+                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/0','GET',null,function(data){"
+                            + "openMessage(data, function () {"
+                            + "reloadAjaxContent();"
+                            + "});})"
+                            + "},"
+                            + "function(){"
+                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/1','GET',null,function(data){"
+                            + "openMessage(data, function () {"
+                            + "reloadAjaxContent();"
+                            + "});})"
+                            + "}"
+                            + ")"
+                            + "</script>";
+                    mm.put("SCRIPT", content);
+                    mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + "/script");
+                    return mAV;
+                } else {
+                    try {
+                        result = new CustomerRankCustomerFacade().depositPv(c.getUserName(), c.getRankCustomerId().getId(), 1, (Integer) session.getAttribute("ADMIN_ID"));
+                        switch (result) {
+                            case 1: {
+                                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Tài khoản đã từng nạp gói PV này!");
+                                mm.put("MESSAGE_PAGINATION", mP);
+                                return mAV;
+                            }
+                            case 2: {
+                                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Nạp PV thành công!");
+                                mm.put("MESSAGE_PAGINATION", mP);
+                                return mAV;
+                            }
+                            case 3: {
+                                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Yêu cầu nạp gói 300PV trước!");
+                                mm.put("MESSAGE_PAGINATION", mP);
+                                return mAV;
+                            }
+                            default: {
+                                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
+                                mm.put("MESSAGE_PAGINATION", mP);
+                                return mAV;
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                        mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
+                        mm.put("MESSAGE_PAGINATION", mP);
+                        return mAV;
+                    }
+                }
+            } else {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+        } else {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Bạn không đủ quyền để thực hiện hành động này!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+    }
+
+    @RequestMapping(value = "/NeverUpRank/ShowAllHistoryAward/{cusId}/{status}", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView showAllHistoryAward(@PathVariable(value = "cusId") Integer cusId, @PathVariable(value = "status") Integer status, ModelMap mm, HttpSession session) {
+        ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        Integer result = 0;
+        try {
+            Customer c = (Customer) new CustomerFacade().find(cusId);
+            result = new CustomerRankCustomerFacade().depositPv(c.getUserName(), c.getRankCustomerId().getId(), 1, (Integer) session.getAttribute("ADMIN_ID"));
+            switch (result) {
+                case 1: {
+                    mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Tài khoản đã từng nạp gói PV này!");
+                    mm.put("MESSAGE_PAGINATION", mP);
+                    return mAV;
+                }
+                case 2: {
+                    new HistoryAwardFacade().showAllHistoryAward(cusId, status);
+                    mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Nạp PV thành công!");
+                    mm.put("MESSAGE_PAGINATION", mP);
+                    return mAV;
+                }
+                case 3: {
+                    mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Yêu cầu nạp gói 300PV trước!");
+                    mm.put("MESSAGE_PAGINATION", mP);
+                    return mAV;
+                }
+                default: {
                     mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
                     mm.put("MESSAGE_PAGINATION", mP);
                     return mAV;
                 }
             }
+        } catch (Exception e) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
         }
-        switch (result) {
-            case 1: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Tài khoản đã từng nạp gói PV này!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            case 2: {
-                Boolean check = new HistoryAwardFacade().checkHaveAwards(id);
-                if (check) {
-                    String content = "Nạp PV thành công!<script>"
-                            + "var confirm1=confirm('NPP này đã có thu nhập trước đó! Hiển thị tất cả?');"
-                            + "if(confirm1){"
-                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/0','GET',null,null);"
-                            + "}else{"
-                            + "sendAjax('/Admin/History/NeverUpRank/ShowAllHistoryAward/" + id + "/1','GET',null,null);"
-                            + "}"
-                            + "</script>";
-                    mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", content);
-                    mm.put("MESSAGE_PAGINATION", mP);
-                    return mAV;
-                }
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Nạp PV thành công!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            case 3: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Yêu cầu nạp gói 300PV trước!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            default: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-        }
-    }
-
-    @RequestMapping(value = "/NeverUpRank/ShowAllHistoryAward/{cusId}/{status}", method = RequestMethod.GET)
-    public void showAllHistoryAward(@PathVariable(value = "cusId") Integer cusId, @PathVariable(value = "status") Integer status) {
-        new HistoryAwardFacade().showAllHistoryAward(cusId, status);
     }
 
     @RequestMapping(value = "/NeverUpRank/Insert", method = RequestMethod.POST)

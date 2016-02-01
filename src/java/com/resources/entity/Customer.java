@@ -46,7 +46,7 @@ public class Customer implements java.io.Serializable {
     private String userName;
     private String email;
     private Boolean gender;
-    private Date birthday;
+    private String birthday;
     private String peoplesIdentity;
     private String password;
     private String passwordSalt;
@@ -89,6 +89,7 @@ public class Customer implements java.io.Serializable {
     private Boolean isAccountantApproved;
     private Boolean isDeposited;
     private Boolean isLock;
+    private String pinCode;
     private Set<CustomerRankCustomer> customerRankCustomers = new HashSet<>(0);
     private Set<HistoryAwards> historyAwardses = new HashSet<>(0);
     private Set<TransactionHistories> transactionHistorieses = new HashSet<>(0);
@@ -200,13 +201,12 @@ public class Customer implements java.io.Serializable {
         this.gender = gender;
     }
 
-    @Temporal(TemporalType.TIMESTAMP)
-    @Column(name = "Birthday", length = 23, updatable = false)
-    public Date getBirthday() {
+    @Column(name = "Birthday")
+    public String getBirthday() {
         return this.birthday;
     }
 
-    public void setBirthday(Date birthday) {
+    public void setBirthday(String birthday) {
         this.birthday = birthday;
     }
 
@@ -653,5 +653,14 @@ public class Customer implements java.io.Serializable {
 
     public void setIsLock(Boolean isLock) {
         this.isLock = isLock;
+    }
+
+    @Column(name = "PinCode")
+    public String getPinCode() {
+        return pinCode;
+    }
+    
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 }

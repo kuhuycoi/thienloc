@@ -61,6 +61,27 @@
             </div>  
             <div class="row">
                 <div class="col-xs-2">
+                    <label>Đại lý *</label>
+                </div>
+                <div class="col-xs-10">                   
+                    <select name="provinceAgencyId" required class="form-control">
+                        <option value=''>-- Lựa chọn Đại lý --</option>
+                        <c:forEach items="${f:findAllAvailableProvincialAgencies()}" var="provincialAgency">
+                            <option value='${provincialAgency.id}'>${provincialAgency.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <label>Ngày sinh *</label>
+                </div>
+                <div class="col-xs-10"> 
+                    <input type="text" name="birthday" class="form-control date-mask" required pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
                     <label>Số CMND *</label>
                 </div>
                 <div class="col-xs-10">
@@ -74,19 +95,6 @@
                 </div>
                 <div class="col-xs-10">
                     <input type="text" name="lastActivityDateUtc" pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" class="form-control date-mask" />
-                </div>
-            </div>  
-            <div class="row">
-                <div class="col-xs-2">
-                    <label>Đại lý *</label>
-                </div>
-                <div class="col-xs-10">                   
-                    <select name="provinceAgencyId" required class="form-control">
-                        <option value=''>-- Lựa chọn Đại lý --</option>
-                        <c:forEach items="${f:findAllAvailableProvincialAgencies()}" var="provincialAgency">
-                            <option value='${provincialAgency.id}'>${provincialAgency.name}</option>
-                        </c:forEach>
-                    </select>
                 </div>
             </div>  
             <div class="row">

@@ -9,6 +9,10 @@ import com.resources.function.CustomFunction;
 import com.resources.pagination.index.*;
 import com.resources.utils.ConfigUtils;
 import com.resources.utils.StringUtils;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -152,6 +156,8 @@ public class IndexCustomerController {
                 return mAV;
             }
             request.getSession().setAttribute("CUSTOMER_ID", cus.getId());
+            request.getSession().setAttribute("CUSTOMER_PIN_CODE", cus.getPinCode());
+            request.getSession().setAttribute("CUSTOMER_ACTIVE_TIME", cus.getLastLoginDateUtc());
             mm.put("REDIRECT_URL", "/trang-chu");
             mAV = new ModelAndView(DefaultIndexPagination.REDIRECT_FOLDER + DefaultIndexPagination.REDIRECT_VIEW);
             return mAV;
@@ -211,6 +217,20 @@ public class IndexCustomerController {
             mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
         }
+        Calendar birthday = Calendar.getInstance();
+        Calendar current=Calendar.getInstance();
+        try {
+            birthday.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(customerNonActive.getBirthday()));
+            if (birthday.get(Calendar.YEAR) >= (current.get(Calendar.YEAR)-18)) {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đăng ký không thành công. Bạn chưa đủ tuổi tham gia hệ thống này!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+        } catch (Exception e) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Định dạng ngày tháng không hợp lệ: dd/mm/yyyy!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
         customerNonActive.setUserName(customerNonActive.getTitle());
         int result;
         try {
@@ -263,11 +283,16 @@ public class IndexCustomerController {
                 return mAV;
             }
             case 9: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống");
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             case 10: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Người chỉ định và người giới thiệu phải trong cùng một hệ thống!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 11: {
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Đăng ký thành công, Username: " + customerNonActive.getUserName() + "!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;

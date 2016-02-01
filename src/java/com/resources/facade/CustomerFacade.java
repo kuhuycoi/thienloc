@@ -654,7 +654,9 @@ public class CustomerFacade extends AbstractFacade {
             if (StringUtils.isEmpty(customerNonActive.getLastName())
                     || StringUtils.isEmpty(customerNonActive.getTitle())
                     || StringUtils.isEmpty(customerNonActive.getParentName())
-                    || StringUtils.isEmpty(customerNonActive.getCustomerName())) {
+                    || StringUtils.isEmpty(customerNonActive.getCustomerName())
+                    || StringUtils.isEmpty(customerNonActive.getBirthday())
+                    || StringUtils.isEmpty(customerNonActive.getPeoplesIdentity())) {
                 return 2;
             }
             CustomerDistributor distributor = findCustomerByTitle(customerNonActive.getUserName());
@@ -686,6 +688,12 @@ public class CustomerFacade extends AbstractFacade {
             if ((Integer) q.uniqueResult() == 0) {
                 return 9;
             }
+            q=session.createSQLQuery("Check_SameSystem :parendId,:customerid");
+            q.setParameter("parendId", distributorParent.getId());
+            q.setParameter("customerid", distributorCustomer.getId());
+            if ((Integer) q.uniqueResult() == 0) {
+                return 10;
+            }
 
             Customer c = new Customer();
             c.setLastName(StringUtils.escapeHtmlEntity(customerNonActive.getLastName()));
@@ -707,6 +715,7 @@ public class CustomerFacade extends AbstractFacade {
             c.setCustomerIdcrm(distributorCustomer.getCustomerIdcrm() + "," + String.valueOf(distributorCustomer.getId()));
             c.setIsActive(customerNonActive.getIsActive());
             c.setAddress(StringUtils.escapeHtmlEntity(customerNonActive.getAddress()));
+            c.setBirthday(customerNonActive.getBirthday());
             if (customerNonActive.getLastActivityDateUtc() != null && customerNonActive.getPeoplesIdentity() != null) {
                 c.setLastActivityDateUtc(customerNonActive.getLastActivityDateUtc());
             }
@@ -715,7 +724,7 @@ public class CustomerFacade extends AbstractFacade {
             if (customerNonActive.getIsActive() != null && customerNonActive.getIsActive()) {
                 activeCustomer(c.getId());
             }
-            result = 10;
+            result = 11;
             trans.commit();
         } catch (Exception e) {
             try {

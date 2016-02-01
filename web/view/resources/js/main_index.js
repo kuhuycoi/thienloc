@@ -778,7 +778,7 @@ $.fn.validate = function () {
     $.each($(this).find('.form-control:not(.external),input[type="checkbox"]'), function () {
         $(this).removeClass('error');
         if ($(this).is('.form-control:not(.external)')) {
-            if($(this).is('select')&& $(this).val()===''){
+            if($(this).is('select')&& $(this).val()==='' &&$(this).attr('required')){
                 $(this).addClass('error');
                 props['data-original-title'] = msg['required'];
                 if ($(this).attr('data-original-title-required')) {

@@ -531,11 +531,16 @@ public class AdminCustomerController {
                 return mAV;
             }
             case 9: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống");
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Số CMND không nằm trong một hệ thống!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             case 10: {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Người chỉ định và người giới thiệu phải trong cùng một hệ thống!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+            case 11: {
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Đăng ký thành công, Username: " + customerNonActive.getUserName() + "!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;

@@ -1,4 +1,5 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
+
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="/WEB-INF/tlds/functions.tld" %>
 <div class="panel">
@@ -23,20 +24,18 @@
         </ul>
     </div>
 </div>
-<%--<div class="panel">
-    <div class="panel-heading">
-        <a data-toggle="collapse" href="#collapseTwo">
-            Lịch sử giao dịch
-        </a>
+<c:if test="${f:checkTrianTime(applicationScope['MAIN_PROPERTIES_FILE_PATH'], sessionScope['CUSTOMER_ACTIVE_TIME'])}">
+    <div class="panel">
+        <div class="panel-heading">
+            <a data-toggle="collapse" href="#collapseTwo">Tri ân</a>
+        </div>
+        <div class="panel-body collapse in" id="collapseTwo">
+            <ul>
+                <li><a class="btn-change-content bold-red" controller="<c:url value="/Report/Trian/ViewInsert" />">Tham gia chương trình tri ân</a></li>
+            </ul>
+        </div>
     </div>
-    <div class="panel-body collapse in" id="collapseTwo">
-        <ul>
-            <li><a class="btn-change-content" controller="<c:url value="/History/CustomerRankCustomer/ViewInsert" />">Nạp mã pin</a></li>
-            <li><a class="btn-change-content" controller="<c:url value="/History/CustomerRankCustomer" />">Lịch sử nạp PV</a></li>
-            <li><a class="btn-change-content" controller="<c:url value="/History/UsedPinSys" />">Lịch sử nạp mã PIN</a></li>
-        </ul>
-    </div>
-</div>--%>
+</c:if>
 <div class="panel">
     <div class="panel-heading">
         <a data-toggle="collapse" href="#collapseThree">
@@ -65,10 +64,10 @@
                         <option value="13/6">Hoa hồng Diamond</option>           
                         <option value="13/7">Hoa hồng Crown</option>          
                         <option value="13/8">Hoa hồng Crown VIP</option> --%>    
-                        <option value="15/4">Hoa hồng phần trăm gói đồng</option>     
-                        <option value="15/5">Hoa hồng phần trăm gói bạc</option>     
-                        <option value="15/6">Hoa hồng phần trăm gói vàng</option>     
-                        <option value="15/7">Hoa hồng phần trăm gói kim cương</option>       
+                        <option value="15/4">Hoa hồng phần trăm mức đồng</option>     
+                        <option value="15/5">Hoa hồng phần trăm mức bạc</option>     
+                        <option value="15/6">Hoa hồng phần trăm mức vàng</option>     
+                        <option value="15/7">Hoa hồng phần trăm mức kim cương</option>       
                         <option value="14/-1">Hoa hồng lãnh đạo</option>       
                         <option value="6/-1">Lương hệ thống</option>     
                         <!--<option value="1/-1">Hoa hồng hoàn vốn</option>  -->
@@ -126,16 +125,3 @@
         </ul>
     </div>
 </div>
-<%--<div class="panel">
-    <div class="panel-heading">
-        <a data-toggle="collapse" href="#collapseFour">
-            Thanh toán hoa hồng            
-        </a>
-    </div>
-    <div class="panel-body collapse in" id="collapseFour">
-        <ul>
-            <li><a class="btn-change-content" controller="<c:url value="/Payment/ViewInsert" />">Yêu cầu thanh toán</a></li>
-            <li><a class="btn-change-content" controller="<c:url value="/Report/Award/4" />">Lich sử thanh toán</a></li>
-        </ul>
-    </div>
-</div>--%>

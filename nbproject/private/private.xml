@@ -4,7 +4,17 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
             <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/index/ajax-navigation.jsp</file>
-            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/index/default.jsp</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/admin/ajax_content/customer_edit_modal.jsp</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/src/java/com/resources/listener/GeneralContextListener.java</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/index/ajax_content/report_trian_insert_modal.jsp</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/src/java/com/resources/entity/Customer.java</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/src/java/com/resources/function/CustomFunction.java</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/index/news_detail_main_content.jsp</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/view/includes/index/ajax_content/register.jsp</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/WEB-INF/tlds/functions.tld</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/src/java/com/resources/controller/IndexCustomerController.java</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/src/java/com/resources/bean/CustomerNonActive.java</file>
+            <file>file:/C:/Users/thien_000/Documents/GitHub/thienloc/web/WEB-INF/Config.properties</file>
         </group>
     </open-files>
 </project-private>

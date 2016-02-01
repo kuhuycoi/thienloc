@@ -243,4 +243,14 @@
         <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>List findAllGaleryCategory()</function-signature>
     </function>
+    <function>
+        <name>checkTrianTime</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>Boolean checkTrianTime(java.lang.String,java.util.Date)</function-signature>
+    </function>
+    <function>
+        <name>getTrianTime</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>Long getTrianTime(java.lang.String)</function-signature>
+    </function>
 </taglib>
