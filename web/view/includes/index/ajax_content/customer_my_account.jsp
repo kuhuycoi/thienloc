@@ -37,7 +37,7 @@
             </tr>
             <tr>
                 <td>Hoa hồng sau thuế</td>
-                <td class="redColor">${f:formatCurrency(f:getTotalOutOfCustomerId(sessionScope['CUSTOMER_ID'])*90/100)}</td>
+                <td class="redColor">${f:formatCurrency(f:getTotalOutOfCustomerId(sessionScope['CUSTOMER_ID'])*95/100)}</td>
             </tr>
             <tr>
                 <td>Người giới thiệu</td>
@@ -57,7 +57,7 @@
             </tr>
             <tr>
                 <td>Ngày sinh</td>
-                <td>${CUSTOMER.birthday==null?'':f:formatDate(CUSTOMER.birthday)}</td>
+                <td>${CUSTOMER.dateOfBirth}</td>
             </tr>
             <tr>
                 <td>Số CMND</td>
@@ -80,5 +80,54 @@
                 <td>${CUSTOMER.taxCode}</td>
             </tr>
         </table>
+        <div class="buttonBar"></div>
+        <c:if test="${f:getPropertyBooleanValue(applicationScope['MAIN_PROPERTIES_FILE_PATH'], 'allowUpdateInfo')}">
+            <form action="/Customer/MyAccount/Edit" method="post" novalidate class="form-insert form-horizontal">
+                <fieldset>
+                    <legend><b>Cập nhật thông tin:</b></legend>
+
+                    <div class="form-group">
+                        <label class="col-xs-3">Ngày sinh</label>
+                        <div class="col-xs-9">
+                            <input type="text" name="dateOfBirth" class="form-control date-mask" required pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" value="${CUSTOMER.dateOfBirth}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3">Số ĐT</label>
+                        <div class="col-xs-9">
+                            <input type="text" name="mobile" pattern="^0|\+[\d]+[\d]+$" required data-original-title-pattern="Định dạng số điện thoại không hợp lệ" class="form-control" value="${CUSTOMER.mobile}" />
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-xs-3">Địa chỉ</label>
+                        <div class="col-xs-9">
+                            <td class="col-sm-8 col-xs-12"><textarea class="form-control" rows="5" required name="address">${CUSTOMER.address}</textarea>
+                        </div>
+                    </div>
+                    <div class="buttonBar"></div>
+                    <button type="submit" class="btn btn-blue">Cập nhật</button> <button type="reset" class="btn btn-blue">Nhập lại</button>
+                </fieldset>
+            </form>
+            <div class="buttonBar"></div>
+        </c:if>
+
+        <c:if test="${f:getPropertyBooleanValue(applicationScope['MAIN_PROPERTIES_FILE_PATH'], 'allowUpdateTaxCode')}">
+            <form action="/Customer/MyAccount/EditTaxCode" method="post" novalidate class="form-insert form-horizontal">
+                <fieldset>
+                    <legend><b>Cập nhật mã số thuế:</b></legend>
+
+                    <div class="form-group">
+                        <label class="col-xs-3">Mã số thế: </label>
+                        <div class="col-xs-9">
+                            <input type="text" name="taxCode" class="form-control" required value="${CUSTOMER.taxCode}" />
+                        </div>
+                    </div>
+                    <div class="buttonBar"></div>
+                    <button type="submit" class="btn btn-blue">Cập nhật</button> <button type="reset" class="btn btn-blue">Nhập lại</button>
+                </fieldset>
+            </form>
+        </c:if>
     </div>
 </div>

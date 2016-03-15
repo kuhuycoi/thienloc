@@ -1,21 +1,23 @@
 package com.resources.controller;
 
 import com.resources.entity.CheckAwards;
+import com.resources.entity.SystemTrian;
 import com.resources.facade.CheckAwardsFacade;
 import com.resources.facade.CustomerFacade;
 import com.resources.facade.HistoryAwardFacade;
+import com.resources.facade.SystemTrianFacade;
 import com.resources.function.CustomFunction;
 import com.resources.pagination.index.*;
-import static java.lang.System.out;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import net.tanesha.recaptcha.ReCaptchaImpl;
-import net.tanesha.recaptcha.ReCaptchaResponse;
-import org.hibernate.Session;
 import org.springframework.stereotype.Controller;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.request;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -118,7 +120,6 @@ public class IndexReportController {
         ReportPagination awardPagination = (ReportPagination) session.getAttribute("INDEX_HISTORY_AWARD_TOTAL_PAGINATION");
         if (awardPagination != null) {
             awardPagination.setDisplayPerPage(displayPerPage);
-
         }
         return customerRankCustomerTotalView(awardPagination, session);
     }
@@ -286,15 +287,72 @@ public class IndexReportController {
     @RequestMapping(value = "/Trian/Insert", method = RequestMethod.POST)
     @ResponseBody
     public ModelAndView insertTrian(@RequestBody Map map, ModelMap mm, HttpServletRequest request) {
+        ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
         HttpSession session = request.getSession();
         Map captchaList = (Map) session.getAttribute("CAPTCHA");
         String triAnCaptcha = (String) captchaList.get("TRIAN");
-        String checkCaptcha = (String) map.get("captcha");
-        if (checkCaptcha == null || (checkCaptcha != null && !CustomFunction.md5(checkCaptcha).equals(triAnCaptcha))) {
-            System.out.println("Answer was wrong!");
-        }else{
-            System.out.println("Answer was entered correctly!");
+        String checkCaptcha = ((String) map.get("captcha")).toLowerCase();
+        String checkPinCode = (String) map.get("pinCode");
+        String userPinCode = (String) session.getAttribute("CUSTOMER_PIN_CODE");
+        Integer userId = (Integer) session.getAttribute("CUSTOMER_ID");
+        Date customerActiveTime = (Date) session.getAttribute("CUSTOMER_ACTIVE_TIME");
+        Boolean checkTrianTime = CustomFunction.checkTrianTime((String) request.getServletContext().getAttribute("MAIN_PROPERTIES_FILE_PATH"), customerActiveTime);
+        Date currentTime = new Date();
+        Long trianTime = null;
+        try {
+            trianTime = CustomFunction.getTrianTime((String) request.getServletContext().getAttribute("MAIN_PROPERTIES_FILE_PATH"));
+        } catch (ParseException ex) {
+            Logger.getLogger(IndexReportController.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return null;
+        if (currentTime.getTime() < trianTime) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chưa đến thời gian tham gia chương trình!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } else if (checkCaptcha == null || !CustomFunction.md5(checkCaptcha).equals(triAnCaptcha)) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Mã captcha không hợp lệ!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } else if (!checkTrianTime) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Bạn không đủ điều kiện tham gia chương trình!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        } else if (!checkPinCode.equals(userPinCode)) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Mã PIN không hợp lệ!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        try {
+            new HistoryAwardFacade().joinTrian(userId, userPinCode, currentTime);
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "Thành công", "Tham gia chương trình thành công vào hồi "+new SimpleDateFormat("HH:mm:ss.SSS dd/MM/yyyy").format(currentTime)+"!"
+                        + "<script>$(document).ready(function() {"
+                        + "$('#ajax-content').html('');"
+                        + "$('.item-join-trian').remove();"
+                        + "$('.item-tree-trian').removeClass('hidden');"
+                        + "$('.item-tree-trian a').trigger('click')"
+                        + "});</script>");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+        } catch (Exception e) {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi vui lòng thử lại sau!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+        }
+    }
+
+    //Tree Tri an
+    @RequestMapping(value = "/Trian/TreeTrian", method = RequestMethod.GET)
+    @ResponseBody
+    public ModelAndView getTreeCustomer(ModelMap mm, HttpSession session) {
+        Integer cusid = (Integer) session.getAttribute("CUSTOMER_ID");
+        SystemTrian myTrian = new SystemTrianFacade().findByCustomerId(cusid);
+        List tree = null;
+        try {
+            tree = new SystemTrianFacade().getTreeTrian(cusid);
+            mm.put("TREE_TRIAN", CustomFunction.buildTreeTrian(tree, myTrian.getParentPos()));
+        } catch (Exception ex) {
+            mm.put("TREE_TRIAN", null);
+        }
+        return new ModelAndView(DefaultIndexPagination.AJAX_FOLDER + "/report_trian_tree");
     }
 }

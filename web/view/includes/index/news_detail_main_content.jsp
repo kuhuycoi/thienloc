@@ -1,7 +1,7 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="/WEB-INF/tlds/functions.tld" %>
-<h1>${INDEX_NEWS.caId.name}</h1>
+<h1><a href="/tin-tuc/${INDEX_NEWS.caId.id}/trang-1">${INDEX_NEWS.caId.name}</a></h1>
 <div class="panel">
     <div class="panel-heading clearfix">
         <h2>${INDEX_NEWS.name}</h2>
@@ -28,11 +28,14 @@
         display: inline-block;
         width: auto;
         border: none;
-        float: left
+        float: left;
+		max-width:calc(100% - 200px);
+		line-height:24px;
     }
     #ajax-content .panel .panel-heading .news-time{
         font-size: 14px;
         display: inline-block;
         float: right;
+		max-width:200px;
     }
 </style>

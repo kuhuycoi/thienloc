@@ -5,6 +5,7 @@ import com.resources.bean.CustomerTree;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -46,7 +47,7 @@ public class Customer implements java.io.Serializable {
     private String userName;
     private String email;
     private Boolean gender;
-    private String birthday;
+    private Date birthday;
     private String peoplesIdentity;
     private String password;
     private String passwordSalt;
@@ -90,6 +91,7 @@ public class Customer implements java.io.Serializable {
     private Boolean isDeposited;
     private Boolean isLock;
     private String pinCode;
+    private String dateOfBirth;
     private Set<CustomerRankCustomer> customerRankCustomers = new HashSet<>(0);
     private Set<HistoryAwards> historyAwardses = new HashSet<>(0);
     private Set<TransactionHistories> transactionHistorieses = new HashSet<>(0);
@@ -201,12 +203,13 @@ public class Customer implements java.io.Serializable {
         this.gender = gender;
     }
 
-    @Column(name = "Birthday")
-    public String getBirthday() {
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "Birthday", insertable = false, updatable = false)
+    public Date getBirthday() {
         return this.birthday;
     }
 
-    public void setBirthday(String birthday) {
+    public void setBirthday(Date birthday) {
         this.birthday = birthday;
     }
 
@@ -509,7 +512,7 @@ public class Customer implements java.io.Serializable {
         this.title = title;
     }
 
-    @Column(name = "Level", updatable = false)
+    @Column(name = "[Level]", updatable = false)
     public Integer getLevel() {
         return this.level;
     }
@@ -659,8 +662,17 @@ public class Customer implements java.io.Serializable {
     public String getPinCode() {
         return pinCode;
     }
-    
+
     public void setPinCode(String pinCode) {
         this.pinCode = pinCode;
+    }
+
+    @Column(name = "DateOfBirth")
+    public String getDateOfBirth() {
+        return dateOfBirth;
+    }
+
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 }

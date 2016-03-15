@@ -32,33 +32,44 @@
                 </div>
                 <div class="panel-body">
                     <div class="or">v</div>
-                    <form action="<c:url value="/Admin/Login" />" id="form-login-admin">
+                    <form action="<c:url value="/Admin/Login" />" id="form-login-admin" novalidate>
                         <div class="form-group mb10">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input type="text" name="userName" class="form-control" placeholder="Enter Username">
+                                <input type="text" name="userName" required class="form-control" placeholder="Enter Username">
                             </div>
                         </div>
                         <div class="form-group nomargin">
                             <div class="input-group">
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input type="password" name="password" class="form-control" placeholder="Enter Password">
+                                <input type="password" name="password" required class="form-control" placeholder="Enter Password">
                             </div>
                         </div>
-                        <div class="form-group clearfix">
-                            <div class="checkbox-group pull-left">
-                                <input type="checkbox" class="external" id="inputCheckbox" />
-                                <label for="inputCheckbox">Ghi nhớ đăng nhập</label>
-                            </div>
-                            <a href="#" class="forgot pull-right">Quên mật khẩu?</a>
+                        <div class="form-group nomargin text-center">
+                            <img id="captcha_id" src="/Captcha/AdminLogin/1"/> 
+                            <a href="javascript:;" id="btn-reload-captcha" class="btn" style="color: #000 !important" title="Click để thay đổi captcha" onclick="document.getElementById('captcha_id').src = '/Captcha/AdminLogin/' + Math.random(); return false">
+                                <i class="fa fa-refresh"></i>
+                            </a>
                         </div>
+                        <div class="form-group nomargin">
+                            <div class="input-group">
+                                <span class="input-group-addon"><i class="fa fa-key"></i></span>
+                                <input type="text" name="captcha" required class="form-control" maxlength="6" placeholder="Enter captcha" />
+                            </div>
+                        </div>
+                        <!--                        <div class="form-group clearfix">
+                                                    <div class="checkbox-group pull-left">
+                                                        <input type="checkbox" class="external" id="inputCheckbox" />
+                                                        <label for="inputCheckbox">Ghi nhớ đăng nhập</label>
+                                                    </div>
+                                                    <a href="#" class="forgot pull-right">Quên mật khẩu?</a>
+                                                </div>-->
                         <div class="form-group">
                             <button class="btn btn-primary btn-quirk btn-block btn-lg">Sign In</button>
                         </div>
                     </form>
                 </div>
                 <div class="panel-footer">
-                    <h3>WEBSITE BY <a href="#">LeoTeam</a></h3>
                     <h3>© 2015. All RIGHT RESERVED.</h3>
                     <div>
                         <a href="#"><i class="fa fa-twitter"></i></a>

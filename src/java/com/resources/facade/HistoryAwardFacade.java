@@ -95,18 +95,18 @@ public class HistoryAwardFacade extends AbstractFacade {
                 Criteria cr = session.createCriteria(HistoryAwards.class, "h");
                 cr.createAlias("h.customer", "cus", JoinType.LEFT_OUTER_JOIN);
 
-                cr.add(Restrictions.and(Restrictions.eq("h.isDeleted", false), 
-                        Restrictions.eq("cus.isDelete", false), 
-                        Restrictions.eq("cus.isActive", true), 
+                cr.add(Restrictions.and(Restrictions.eq("h.isDeleted", false),
+                        Restrictions.eq("cus.isDelete", false),
+                        Restrictions.eq("cus.isActive", true),
                         Restrictions.eq("cus.isDeposited", true),
                         Restrictions.eq("cus.isLock", false)));
 
                 if (pagination.getStartDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("DateCreated>=?", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE));
                 }
 
                 if (pagination.getEndDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,DateCreated)<=?", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,DateCreated)<=?", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE));
                 }
 
                 if (pagination.getAgencyId() != null) {
@@ -147,11 +147,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                 Query q = session.createSQLQuery(queryString);
 
                 if (pagination.getStartDate() != null) {
-                    q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
+                    q.setParameter("startDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
 
                 if (pagination.getEndDate() != null) {
-                    q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
+                    q.setParameter("endDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE);
                 }
                 if (pagination.getAgencyId() != null) {
                     q.setParameter("agencyId", pagination.getAgencyId());
@@ -182,11 +182,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                 q = session.createSQLQuery(queryString);
 
                 if (pagination.getStartDate() != null) {
-                    q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
+                    q.setParameter("startDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
 
                 if (pagination.getEndDate() != null) {
-                    q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
+                    q.setParameter("endDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE);
                 }
                 if (pagination.getAgencyId() != null) {
                     q.setParameter("agencyId", pagination.getAgencyId());
@@ -224,7 +224,7 @@ public class HistoryAwardFacade extends AbstractFacade {
             if (session != null) {
                 List<String> listKeywords = pagination.getKeywords();
                 String query = "select ha.customerId,c.lastName,c.userName,c.peoplesIdentity,c.email,c.mobile,c.address,c.taxCode,"
-                        + "c.billingAddress, isnull(sum(ha.PricePv),0) total, isnull(sum(ha.PricePv),0)*90/100 total1 "
+                        + "c.billingAddress, isnull(sum(ha.PricePv),0) total, isnull(sum(ha.PricePv),0)*95/100 total1 "
                         + "from HistoryAwards ha left join Customer c "
                         + "on ha.CustomerId=c.id where ha.IsDeleted=0 and c.IsDelete=0 and c.IsActive=1 "
                         + "and c.isLock=0 and c.isDeposited=1";
@@ -262,11 +262,11 @@ public class HistoryAwardFacade extends AbstractFacade {
                         .addScalar("total", BigDecimalType.INSTANCE)
                         .addScalar("total1", BigDecimalType.INSTANCE);
                 if (pagination.getStartDate() != null) {
-                    q.setParameter("startDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getStartDate()), StringType.INSTANCE);
+                    q.setParameter("startDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE);
                 }
 
                 if (pagination.getEndDate() != null) {
-                    q.setParameter("endDate", new SimpleDateFormat("yyyy-mm-dd").format(pagination.getEndDate()), StringType.INSTANCE);
+                    q.setParameter("endDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE);
                 }
 
                 if (pagination.getAgencyId() != null) {
@@ -302,92 +302,6 @@ public class HistoryAwardFacade extends AbstractFacade {
         }
     }
 
-    public void setExportTrianFile(ExcelFile file) {
-        Session session = null;
-        try {
-            session = HibernateConfiguration.getInstance().openSession();
-            if (session != null) {
-                Query q = session.createSQLQuery("select t.trueVT,c.firstName,c.lastName,c.title,c.mobile,c.email,c.peoplesIdentity,"
-                        + "c.billingAddress,c.taxCode,t.datetimecreated,t.dem,t.levelup,null as total from Triandot2 t "
-                        + "left join Customer c on t.customerID=c.id where c.isDelete=0 and c.isActive=1 order by t.trueVT asc")
-                        .addScalar("trueVT", IntegerType.INSTANCE)
-                        .addScalar("firstName", StringType.INSTANCE)
-                        .addScalar("lastName", StringType.INSTANCE)
-                        .addScalar("title", StringType.INSTANCE)
-                        .addScalar("mobile", StringType.INSTANCE)
-                        .addScalar("email", StringType.INSTANCE)
-                        .addScalar("peoplesIdentity", StringType.INSTANCE)
-                        .addScalar("billingAddress", StringType.INSTANCE)
-                        .addScalar("taxCode", StringType.INSTANCE)
-                        .addScalar("datetimecreated", TimestampType.INSTANCE)
-                        .addScalar("dem", IntegerType.INSTANCE)
-                        .addScalar("levelup", IntegerType.INSTANCE)
-                        .addScalar("total", BigDecimalType.INSTANCE);
-                List<String> header = new ArrayList();
-                header.add("ID");
-                header.add("Họ");
-                header.add("Tên");
-                header.add("Bí danh");
-                header.add("SĐT");
-                header.add("Email");
-                header.add("CMND");
-                header.add("Địa chỉ ngân hàng");
-                header.add("Số tài khoản");
-                header.add("Thời gian tri ân");
-                header.add("Tích lũy");
-                header.add("Mức hoàn phí");
-                header.add("Thành tiền");
-                file.setTitles(header);
-                List rs = q.list();
-                Integer money = 0;
-                for (Object rows : rs) {
-                    Object[] row = (Object[]) rows;
-                    row[9] = CustomFunction.formatTime((Date) row[9]);
-                    switch ((Integer) row[11]) {
-                        case 1: {
-                            money = 20;
-                            break;
-                        }
-                        case 2: {
-                            money = 120;
-                            break;
-                        }
-                        case 3: {
-                            money = 320;
-                            break;
-                        }
-                        case 4: {
-                            money = 1000;
-                            break;
-                        }
-                    }
-                    row[12] = CustomFunction.formatCurrency(BigDecimal.valueOf(money));
-                }
-                file.setContents(rs);
-                file.setFileName("Thong ke tri an");
-            }
-        } catch (Exception e) {
-            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
-        } finally {
-            HibernateConfiguration.getInstance().closeSession(session);
-        }
-    }
-
-    public int calcSalary() throws Exception {
-        Session session = null;
-        int result = 0;
-        try {
-            session = HibernateConfiguration.getInstance().openSession();
-            if (session != null) {
-                result = (Integer) session.createSQLQuery("CalcSalary").uniqueResult();
-            }
-            return result;
-        } catch (Exception e) {
-            throw e;
-        } finally {
-            HibernateConfiguration.getInstance().closeSession(session);
-        }
-    }
 
     public List<HistoryAward> pageData(HistoryPagination pagination, int cusId, int checkAwardId, int month, int year) throws Exception {
         Session session = null;
@@ -764,6 +678,23 @@ public class HistoryAwardFacade extends AbstractFacade {
         }
         return list;
     }
+    public List reportHistoryReceiveAwardForCustomer(Integer cusId) {
+        Session session = null;
+        List list = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                Query q = session.createSQLQuery("ReportHistoryReceiveAwardForCustomer :cusid").addScalar("name", StringType.INSTANCE).addScalar("dateCreate", TimestampType.INSTANCE);
+                q.setParameter("cusid", cusId);
+                list = q.list();
+            }
+        } catch (Exception e) {
+            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+        return list;
+    }
 
     public void pageDataGByMonth(com.resources.pagination.index.ReportPagination reportPagination) {
         Session session = null;
@@ -889,6 +820,10 @@ public class HistoryAwardFacade extends AbstractFacade {
             trans = session.beginTransaction();
             Query q = session.createSQLQuery("update HistoryAwards set isDeleted=:isDeleted where CustomerId=:cusId").setParameter("cusId", cusId).setParameter("isDeleted", status);
             q.executeUpdate();
+            if (status == 1) {
+                q = session.createSQLQuery("update RankNow set PVMonth = 0,PVMonth1= 0,PVUser= 0, PVUser1= 0, PricePVUser=0,PricePVUser1=0 where CustomerID =:cusId").setParameter("cusId", cusId);
+                q.executeUpdate();
+            }
             trans.commit();
         } catch (Exception e) {
             try {
@@ -899,6 +834,32 @@ public class HistoryAwardFacade extends AbstractFacade {
                 throw ex;
             }
             Logger.getLogger(HistoryAwards.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+
+    public void joinTrian(Integer cusId, String pinCode,Date currentTime) throws Exception {
+        Session session = null;
+        Transaction trans = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                trans = session.beginTransaction();
+                Query q = session.createSQLQuery("Insert_Trian :cusId,:currentTime").setParameter("cusId", cusId).setParameter("currentTime", currentTime);
+                q.executeUpdate();
+                trans.commit();
+            }
+        } catch (Exception e) {
+            try {
+                if (trans != null) {
+                    trans.rollback();
+                }
+            } catch (Exception ex) {
+                throw ex;
+            }
+            e.printStackTrace();
+            throw e;
         } finally {
             HibernateConfiguration.getInstance().closeSession(session);
         }

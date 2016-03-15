@@ -9,6 +9,7 @@ import com.resources.facade.RankNowFacade;
 import com.google.gson.Gson;
 import com.resources.bean.CustomerNonActive;
 import com.resources.bean.CustomerTree;
+import com.resources.bean.TrianTree;
 import com.resources.entity.Admin;
 import com.resources.entity.Customer;
 import com.resources.entity.ModuleInRole;
@@ -21,6 +22,7 @@ import com.resources.facade.NewsFacade;
 import com.resources.facade.PinSysFacade;
 import com.resources.facade.PromotionFacade;
 import com.resources.facade.RoleAdminFacade;
+import com.resources.facade.SystemTrianFacade;
 import com.resources.utils.ConfigUtils;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -37,7 +39,6 @@ import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-import javax.servlet.http.HttpServletRequest;
 
 public class CustomFunction {
 
@@ -192,8 +193,8 @@ public class CustomFunction {
         StringBuilder sB = new StringBuilder();
         sB.append("<ul>");
         list.stream().forEach((c) -> {
-            String popOver = "<span class='popover-dismiss' data-toggle='popover' data-placement='right' data-title='" + c.getName() + "' ";
-            popOver += "data-content='<b>Username:</b> " + c.getUserName() + "<br/>"
+            String popOver = "<span class='popover-dismiss' data-toggle='popover' data-placement='right' data-title='" + c.getUserName() + "' ";
+            popOver += "data-content='"
                     + "<b>Chức vụ:</b> " + c.getLevelName() + "</br>" + "'>";
 //                    + "<b>Chu kỳ:</b> " + c.getCircle() + "</br>"
 //                    + "<b>Nhánh trái:</b> " + formatCurrency(c.getpVLeft()) + "<br/>"
@@ -216,11 +217,36 @@ public class CustomFunction {
                 sB.append("<span class='fa fa-user'></span>&nbsp;");
             }
             sB.append(popOver);
-            sB.append(c.getName()).append(" - ").append(c.getUserName())
+            sB.append(c.getUserName())
                     .append(" <i class='text-danger'>(T ").append(c.getLevel()).append(")</i>").append("</span></a>");
             if (c.getRelativeLevel() != 6) {
                 sB.append(buildTreeCustomer(customerList, c.getKey(), rootController));
             }
+            sB.append("</li>");
+        });
+        sB.append("</ul>");
+        return sB.toString();
+    }
+
+    public static List<TrianTree> filterTrianList(List<TrianTree> trianList, Integer parentPos) {
+        return trianList.stream().filter(c -> {
+            return Objects.equals(c.getParentPos(), parentPos);
+        }).collect(Collectors.toList());
+    }
+
+    public static String buildTreeTrian(List<TrianTree> trianList, Integer firstPos) {
+        List<TrianTree> list = filterTrianList(trianList, firstPos);
+        StringBuilder sB = new StringBuilder();
+        sB.append("<ul>");
+        list.stream().forEach((c) -> {
+            sB.append("<li><a>");
+            if (c.getTotalChildren() > 0) {
+                sB.append("<span class='fa fa-minus-square-o'></span>&nbsp;");
+            } else {
+                sB.append("<span class='fa fa-user'></span>&nbsp;");
+            }
+            sB.append(c.getUserName()).append(" - Rank ").append(c.getLevelRank()).append(" <b class='text-danger'>(").append(new SimpleDateFormat("HH:mm:ss.SSS dd/MM/yyyy").format(c.getDateCreated())).append(")</b>").append("</a>");
+            sB.append(buildTreeTrian(trianList, c.getPos()));
             sB.append("</li>");
         });
         sB.append("</ul>");
@@ -305,6 +331,10 @@ public class CustomFunction {
         return new HistoryAwardFacade().reportAllTotalAwardForCustomer(cusId);
     }
 
+    public static List reportHistoryReceiveAwardForCustomer(Integer cusId) {
+        return new HistoryAwardFacade().reportHistoryReceiveAwardForCustomer(cusId);
+    }
+
     public static BigDecimal getSystemAwards(String peoplesIdentity) {
         return new HistoryAwardFacade().getSystemAwards(peoplesIdentity);
     }
@@ -325,25 +355,39 @@ public class CustomFunction {
         return new GaleryFacade().findAll();
     }
 
-    public static Boolean checkTrianTime(String propertiesFilePath, Date checkTime) throws ParseException {
-        String trianStartTime = ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.start");
-        String trianFinishTime = ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.finish");
-        if (checkTime == null || trianStartTime == null || trianFinishTime == null) {
+    public static Boolean checkTrianTime(String propertiesFilePath, Date checkTime) {
+        String trianStartTime = ConfigUtils.getInstance().getProperty(propertiesFilePath, "trian.time.start");
+        String trianFinishTime = ConfigUtils.getInstance().getProperty(propertiesFilePath, "trian.time.finish");
+        if (checkTime == null || trianStartTime == null || trianFinishTime == null || trianStartTime.trim().length() == 0 || trianFinishTime.trim().length() == 0) {
             return false;
         }
-        SimpleDateFormat sDF = new SimpleDateFormat("dd/mm/yyyy");
-        Date startTime = sDF.parse(trianStartTime);
-        Date finishTime = sDF.parse(trianFinishTime);
-        checkTime = sDF.parse(sDF.format(checkTime));
-        if (checkTime.compareTo(startTime) >= 0 && checkTime.compareTo(finishTime) <= 0) {
-            return true;
-        } else {
+        SimpleDateFormat sDF = new SimpleDateFormat("dd/MM/yyyy");
+        Date startTime;
+        Date finishTime;
+        try {
+            startTime = sDF.parse(trianStartTime);
+            finishTime = sDF.parse(trianFinishTime);
+            checkTime = sDF.parse(sDF.format(checkTime));
+        } catch (ParseException ex) {
             return false;
         }
+        return checkTime.compareTo(startTime) >= 0 && checkTime.compareTo(finishTime) <= 0;
+    }
+    
+    public static String getProperty(String propertiesFilePath,String propertyName){
+        return ConfigUtils.getInstance().getProperty(propertiesFilePath, propertyName);
+    }
+    
+    public static Boolean getPropertyBooleanValue(String propertiesFilePath,String propertyName){
+        return Boolean.valueOf(ConfigUtils.getInstance().getProperty(propertiesFilePath, propertyName));
+    }
+
+    public static Boolean checkJoinedTrian(int cusId) {
+        return new SystemTrianFacade().checkJoinedTrian(cusId);
     }
 
     public static Long getTrianTime(String propertiesFilePath) throws ParseException {
-        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(ConfigUtils.getInstance().readProperty(propertiesFilePath, "trian.time.exacly")).getTime();
+        return new SimpleDateFormat("dd/MM/yyyy HH:mm:ss").parse(ConfigUtils.getInstance().getProperty(propertiesFilePath, "trian.time.exacly")).getTime();
     }
 
     public static String md5(String input) {

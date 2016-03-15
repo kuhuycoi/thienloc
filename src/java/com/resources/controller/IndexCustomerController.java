@@ -9,10 +9,8 @@ import com.resources.function.CustomFunction;
 import com.resources.pagination.index.*;
 import com.resources.utils.ConfigUtils;
 import com.resources.utils.StringUtils;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -40,47 +38,46 @@ public class IndexCustomerController {
         return new ModelAndView(DefaultIndexPagination.AJAX_FOLDER + DefaultIndexPagination.RESET_PASSWORD_VIEW);
     }
 
-    @RequestMapping(value = "/ResetPassword", method = RequestMethod.POST)
-    @ResponseBody
-    public ModelAndView resetPasswordView(@RequestBody Customer cus, ModelMap mm, HttpServletRequest request) {
-        ModelAndView mAV = new ModelAndView(MessagePagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
-        MessagePagination messagePagination;
-        if (StringUtils.isEmpty(cus.getUserName()) || StringUtils.isEmpty(cus.getEmail())) {
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tên đăng nhập và email!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
-            return mAV;
-        }
-        try {
-            Integer rs = 0;
-            switch (rs) {
-                case 1: {
-                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Chú ý", "Tên đăng nhập hoặc email không hợp lệ!");
-                    mm.put("MESSAGE_PAGINATION", messagePagination);
-                    return mAV;
-                }
-                case 2: {
-                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Mật khẩu đã được reset để đảm bảo an toàn cho tài khoản của bạn nhưng chưa được gửi về email!");
-                    mm.put("MESSAGE_PAGINATION", messagePagination);
-                    return mAV;
-                }
-                case 3: {
-                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "Thành công", "Mật khẩu đã được reset và gửi về hòm thư của bạn!");
-                    mm.put("MESSAGE_PAGINATION", messagePagination);
-                    return mAV;
-                }
-            }
-            request.getSession(false).setAttribute("CUSTOMER_ID", cus.getId());
-            mm.put("REDIRECT_URL", "/Home");
-            mAV = new ModelAndView(DefaultIndexPagination.REDIRECT_FOLDER + DefaultIndexPagination.REDIRECT_VIEW);
-            return mAV;
-        } catch (Exception e) {
-            e.printStackTrace();
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
-            return mAV;
-        }
-    }
-
+//    @RequestMapping(value = "/ResetPassword", method = RequestMethod.POST)
+//    @ResponseBody
+//    public ModelAndView resetPasswordView(@RequestBody Customer cus, ModelMap mm, HttpServletRequest request) {
+//        ModelAndView mAV = new ModelAndView(MessagePagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+//        MessagePagination messagePagination;
+//        if (StringUtils.isEmpty(cus.getUserName()) || StringUtils.isEmpty(cus.getEmail())) {
+//            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tên đăng nhập và email!");
+//            mm.put("MESSAGE_PAGINATION", messagePagination);
+//            return mAV;
+//        }
+//        try {
+//            Integer rs = 0;
+//            switch (rs) {
+//                case 1: {
+//                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Chú ý", "Tên đăng nhập hoặc email không hợp lệ!");
+//                    mm.put("MESSAGE_PAGINATION", messagePagination);
+//                    return mAV;
+//                }
+//                case 2: {
+//                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Mật khẩu đã được reset để đảm bảo an toàn cho tài khoản của bạn nhưng chưa được gửi về email!");
+//                    mm.put("MESSAGE_PAGINATION", messagePagination);
+//                    return mAV;
+//                }
+//                case 3: {
+//                    messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "Thành công", "Mật khẩu đã được reset và gửi về hòm thư của bạn!");
+//                    mm.put("MESSAGE_PAGINATION", messagePagination);
+//                    return mAV;
+//                }
+//            }
+//            request.getSession(false).setAttribute("CUSTOMER_ID", cus.getId());
+//            mm.put("REDIRECT_URL", "/Home");
+//            mAV = new ModelAndView(DefaultIndexPagination.REDIRECT_FOLDER + DefaultIndexPagination.REDIRECT_VIEW);
+//            return mAV;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
+//            mm.put("MESSAGE_PAGINATION", messagePagination);
+//            return mAV;
+//        }
+//    }
     @RequestMapping(value = "/ChangePassword", method = RequestMethod.GET)
     @ResponseBody
     public ModelAndView getChangePasswordView(ModelMap mm) {
@@ -129,80 +126,60 @@ public class IndexCustomerController {
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView login(@RequestBody Customer cus, ModelMap mm, HttpServletRequest request) {
+    public ModelAndView login(@RequestBody Map map, ModelMap mm, HttpServletRequest request) {
         ModelAndView mAV = new ModelAndView(MessagePagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
-        MessagePagination messagePagination;
+        MessagePagination mP;
+        Customer cus = new Customer();
+        cus.setUserName(String.valueOf(map.get("userName")));
+        cus.setPassword(String.valueOf(map.get("password")));
+//        String checkCaptcha = String.valueOf(map.get("captcha"));
         if (StringUtils.isEmpty(cus.getUserName()) || StringUtils.isEmpty(cus.getPassword())) {
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tên đăng nhập và mật khẩu!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tất cả các ô!");
+            mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
         }
+//        if (StringUtils.isEmpty(cus.getUserName()) || StringUtils.isEmpty(cus.getPassword()) || StringUtils.isEmpty(checkCaptcha)) {
+//            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tất cả các ô!");
+//            mm.put("MESSAGE_PAGINATION", mP);
+//            return mAV;
+//        }
+//        Map captchaList = (Map) request.getSession().getAttribute("CAPTCHA");
+//        String triAnCaptcha = (String) captchaList.get("CUSTOMER_LOGIN");
+//        checkCaptcha = checkCaptcha.toLowerCase();
+//        if (checkCaptcha == null || !CustomFunction.md5(checkCaptcha).equals(triAnCaptcha)) {
+//            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Mã captcha không hợp lệ!");
+//            mm.put("MESSAGE_PAGINATION", mP);
+//            return mAV;
+//        }
         cus.setPassword(CustomFunction.md5(cus.getPassword()));
         try {
             cus = new CustomerFacade().login(cus);
             if (cus == null) {
-                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Sai tên đăng nhập hoặc mật khẩu!");
-                mm.put("MESSAGE_PAGINATION", messagePagination);
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Sai tên đăng nhập hoặc mật khẩu!");
+                mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             if (!cus.getIsActive()) {
-                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn chưa được kích hoạt!");
-                mm.put("MESSAGE_PAGINATION", messagePagination);
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn chưa được kích hoạt!");
+                mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             if (cus.getIsLock()) {
-                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn đã bị khóa!");
-                mm.put("MESSAGE_PAGINATION", messagePagination);
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn đã bị khóa!");
+                mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
             request.getSession().setAttribute("CUSTOMER_ID", cus.getId());
-            request.getSession().setAttribute("CUSTOMER_PIN_CODE", cus.getPinCode());
-            request.getSession().setAttribute("CUSTOMER_ACTIVE_TIME", cus.getLastLoginDateUtc());
+//            request.getSession().setAttribute("CUSTOMER_PIN_CODE", cus.getPinCode());
+//            request.getSession().setAttribute("CUSTOMER_ACTIVE_TIME", cus.getLastLoginDateUtc());
             mm.put("REDIRECT_URL", "/trang-chu");
             mAV = new ModelAndView(DefaultIndexPagination.REDIRECT_FOLDER + DefaultIndexPagination.REDIRECT_VIEW);
             return mAV;
         } catch (Exception e) {
             e.printStackTrace();
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
-            return mAV;
-        }
-    }
-
-    @RequestMapping(value = "/ActiveCustomer/{id}", method = RequestMethod.GET)
-    @ResponseBody
-    public ModelAndView activeCustomer(@PathVariable(value = "id") Integer id, ModelMap mm) {
-        ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
-        MessagePagination mP;
-        Integer result;
-        try {
-            result = new CustomerFacade().activeCustomer(id);
-        } catch (Exception e) {
-            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
             mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
-        }
-        switch (result) {
-            case 1: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Active thành công!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            case 2: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Nhánh cha đã đủ 2 người!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            case 3: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "ID người dùng không hợp lệ!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
-            default: {
-                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Vui lòng thử lại sau!");
-                mm.put("MESSAGE_PAGINATION", mP);
-                return mAV;
-            }
         }
     }
 
@@ -211,23 +188,22 @@ public class IndexCustomerController {
     public ModelAndView register(@RequestBody CustomerNonActive customerNonActive, ModelMap mm, HttpServletRequest request) {
         ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
         MessagePagination mP;
-        Boolean allowRegister = Boolean.valueOf(ConfigUtils.getInstance().readProperty(request.getServletContext().getRealPath("/WEB-INF/Config.properties"), "allowRegister"));
+        Boolean allowRegister = Boolean.valueOf(ConfigUtils.getInstance().getProperty(request.getServletContext().getRealPath("/WEB-INF/Config.properties"), "allowRegister"));
         if (!allowRegister) {
             mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chức năng đăng ký đang tạm thời ngừng hoạt động!");
             mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
         }
-        Calendar birthday = Calendar.getInstance();
-        Calendar current=Calendar.getInstance();
+        Calendar dateOfBirth = Calendar.getInstance();
         try {
-            birthday.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(customerNonActive.getBirthday()));
-            if (birthday.get(Calendar.YEAR) >= (current.get(Calendar.YEAR)-18)) {
+            dateOfBirth.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(customerNonActive.getDateOfBirth()));
+            if (dateOfBirth.get(Calendar.YEAR) >= 1997) {
                 mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đăng ký không thành công. Bạn chưa đủ tuổi tham gia hệ thống này!");
                 mm.put("MESSAGE_PAGINATION", mP);
                 return mAV;
             }
         } catch (Exception e) {
-            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Định dạng ngày tháng không hợp lệ: dd/mm/yyyy!");
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Định dạng ngày tháng không hợp lệ. Định dạng yêu cầu: dd/mm/yyyy. VD: 01/01/1990!");
             mm.put("MESSAGE_PAGINATION", mP);
             return mAV;
         }
@@ -309,6 +285,53 @@ public class IndexCustomerController {
     @RequestMapping(value = "/MyAccount", method = RequestMethod.GET)
     public ModelAndView myAccount(HttpServletRequest request) {
         return new ModelAndView("includes/index/ajax_content/customer_my_account");
+    }
+
+    //My account
+    @RequestMapping(value = "/MyAccount/Edit", method = RequestMethod.POST)
+    public ModelAndView editAccount(@RequestBody Map map, HttpServletRequest request, ModelMap mm) {
+        ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        Boolean allowRegister = Boolean.valueOf(ConfigUtils.getInstance().getProperty(request.getServletContext().getRealPath("/WEB-INF/Config.properties"), "allowUpdateInfo"));
+        if (!allowRegister) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chức năng cập nhật thông tin đã ngừng hoạt động!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        try {
+            new CustomerFacade().editCustomerByCustomer(map, (int) request.getSession().getAttribute("CUSTOMER_ID"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Cập nhật thông tin thành công!");
+        mm.put("MESSAGE_PAGINATION", mP);
+        return mAV;
+    }//My account
+    
+    @RequestMapping(value = "/MyAccount/EditTaxCode", method = RequestMethod.POST)
+    public ModelAndView editTaxCode(@RequestBody Map map, HttpServletRequest request, ModelMap mm) {
+        ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
+        MessagePagination mP;
+        Boolean allowRegister = Boolean.valueOf(ConfigUtils.getInstance().getProperty(request.getServletContext().getRealPath("/WEB-INF/Config.properties"), "allowUpdateTaxCode"));
+        if (!allowRegister) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chức năng cập nhật mã số thuế đã ngừng hoạt động!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        try {
+            new CustomerFacade().editTaxCodeByCustomer(map, (int) request.getSession().getAttribute("CUSTOMER_ID"));
+        } catch (Exception e) {
+            e.printStackTrace();
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi. Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_SUCCESS, "thành công", "Cập nhật mã số thuế thành công!");
+        mm.put("MESSAGE_PAGINATION", mP);
+        return mAV;
     }
 
     //Tree Customer
@@ -466,9 +489,16 @@ public class IndexCustomerController {
 
     //Change agency action
     @RequestMapping(value = "/ChangeAgency", method = RequestMethod.POST)
-    public ModelAndView getViewChangeAgency(@RequestBody Map map, ModelMap mm, HttpSession session) {
+    public ModelAndView getViewChangeAgency(@RequestBody Map map, ModelMap mm, HttpServletRequest request) {
         ModelAndView mAV = new ModelAndView(DefaultIndexPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
         MessagePagination mP;
+        Boolean allowRegister = Boolean.valueOf(ConfigUtils.getInstance().getProperty(request.getServletContext().getRealPath("/WEB-INF/Config.properties"), "allowUpdateAgency"));
+        if (!allowRegister) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Chức năng cập nhật đại lý đang tạm ngừng hoạt động!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
+        HttpSession session = request.getSession();
         try {
             Customer cus = (Customer) new CustomerFacade().find((Integer) session.getAttribute("CUSTOMER_ID"));
             cus.setProvincialAgencies(new ProvincialAgencies(Integer.parseInt(map.get("provinceAgencyId").toString())));

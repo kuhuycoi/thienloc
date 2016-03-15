@@ -18,14 +18,6 @@
         <servlet-name>thienloc</servlet-name>
         <url-pattern>/</url-pattern>
     </servlet-mapping>
-    <servlet>
-        <servlet-name>CaptchaServlet</servlet-name>
-        <servlet-class>com.resources.controller.CaptchaGenServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>CaptchaServlet</servlet-name>
-        <url-pattern>/captcha.jpg</url-pattern>
-    </servlet-mapping>
     <session-config>
         <tracking-mode>COOKIE</tracking-mode>
     </session-config>

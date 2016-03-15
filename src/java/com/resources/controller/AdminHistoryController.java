@@ -106,7 +106,7 @@ public class AdminHistoryController {
 
     @RequestMapping(value = "/CustomerRankCustomer/ChangeDay/{type}/{day}", method = RequestMethod.GET)
     @ResponseBody
-    public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-mm-dd") Date day, HttpSession session) {
+    public ModelAndView changeDayComissionDistributorView(@PathVariable("type") int type, @PathVariable("day") @DateTimeFormat(pattern = "yyyy-MM-dd") Date day, HttpSession session) {
         HistoryPagination customerRankCustomerPagination = (HistoryPagination) session.getAttribute("CUSTOMER_RANK_CUSTOMER_PAGINATION");
         day = "-1".equals(day) ? null : day;
         if (type == 0) {
@@ -151,11 +151,6 @@ public class AdminHistoryController {
         ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
         MessagePagination mP;
         Integer result = 0;
-//        if (rankCustomerId == 2 || rankCustomerId == 3) {
-//            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Gói PV này chưa đi vào hoạt động!");
-//            mm.put("MESSAGE_PAGINATION", mP);
-//            return mAV;
-//        }    
         Integer role = new AdminFacade().getAdminRoleByAdminId((Integer) session.getAttribute("ADMIN_ID"));
         Customer c = new CustomerFacade().findCustomerByUsername(userName);
         try {

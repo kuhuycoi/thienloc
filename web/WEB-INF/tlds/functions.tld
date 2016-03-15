@@ -10,7 +10,7 @@
     </function>
     <function>
         <name>split</name>
-        <function-class>java.CustomFunction</function-class>
+        <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>String split(java.lang.String, java.lang.String)</function-signature>
     </function>
     <function>
@@ -77,11 +77,6 @@
         <name>checkNameLength</name>
         <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>String checkNameLength(java.lang.String, java.lang.Integer)</function-signature>
-    </function>
-    <function>
-        <name>tranformQuantityToStatus</name>
-        <function-class>com.resources.function.CustomFunction</function-class>
-        <function-signature>String tranformQuantityToStatus(java.lang.Integer)</function-signature>
     </function>
     <function>
         <name>tranformStatus</name>
@@ -217,6 +212,11 @@
         <name>reportAllTotalAwardByMonthForCustomer</name>
         <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>List reportAllTotalAwardByMonthForCustomer(java.lang.Integer)</function-signature>
+    </function>    
+    <function>
+        <name>reportHistoryReceiveAwardForCustomer</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>List reportHistoryReceiveAwardForCustomer(java.lang.Integer)</function-signature>
     </function>         
     <function>
         <name>getSystemAwards</name>
@@ -249,8 +249,23 @@
         <function-signature>Boolean checkTrianTime(java.lang.String,java.util.Date)</function-signature>
     </function>
     <function>
+        <name>checkJoinedTrian</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>Boolean checkJoinedTrian(int)</function-signature>
+    </function>
+    <function>
         <name>getTrianTime</name>
         <function-class>com.resources.function.CustomFunction</function-class>
         <function-signature>Long getTrianTime(java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>getProperty</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>String getProperty(java.lang.String,java.lang.String)</function-signature>
+    </function>
+    <function>
+        <name>getPropertyBooleanValue</name>
+        <function-class>com.resources.function.CustomFunction</function-class>
+        <function-signature>Boolean getPropertyBooleanValue(java.lang.String,java.lang.String)</function-signature>
     </function>
 </taglib>

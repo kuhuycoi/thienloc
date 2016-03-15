@@ -5,7 +5,7 @@ import com.resources.bean.CustomerDistributor;
 import com.resources.bean.CustomerFromTotalParent;
 import com.resources.bean.CustomerNonActive;
 import com.resources.bean.CustomerTree;
-import com.resources.entity.Admin;
+import com.resources.bean.ExcelFile;
 import com.resources.entity.Customer;
 import com.resources.entity.CustomerType;
 import com.resources.entity.Module;
@@ -14,13 +14,17 @@ import com.resources.entity.RankNow;
 import com.resources.function.CustomFunction;
 import com.resources.pagination.admin.CustomerPagination;
 import com.resources.pagination.admin.DefaultAdminPagination;
+import com.resources.pagination.admin.GratefulPagination;
 import com.resources.pagination.admin.HistoryPagination;
 import com.resources.utils.ArrayUtils;
 import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.hibernate.Criteria;
@@ -36,6 +40,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.sql.JoinType;
 import org.hibernate.transform.Transformers;
+import org.hibernate.type.DateType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.StringType;
 import org.hibernate.type.TimestampType;
@@ -183,6 +188,144 @@ public class CustomerFacade extends AbstractFacade {
         }
     }
 
+    public void pageDataGrateful(GratefulPagination pagination) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                Criteria cr = session.createCriteria(Customer.class, "c");
+                cr.createAlias("c.provincialAgencies", "provincialAgencies");
+                cr.add(Restrictions.and(Restrictions.eq("isDelete", false), Restrictions.eq("isActive", true), Restrictions.eq("isDeposited", true), Restrictions.not(Restrictions.eq("id", 1))));
+                cr.add(Restrictions.gt("id", 167345));
+                cr.add(Restrictions.isNotNull("lastLoginDateUtc"));
+                if (pagination.getAgencyId() != null) {
+                    cr.add(Restrictions.eq("provincialAgencies.id", pagination.getAgencyId()));
+                }
+                if (pagination.getHasPinCode() != null) {
+                    if (pagination.getHasPinCode()) {
+                        cr.add(Restrictions.isNotNull("pinCode"));
+                    } else if (!pagination.getHasPinCode()) {
+                        cr.add(Restrictions.isNull("pinCode"));
+                    }
+                }
+
+                if (pagination.getStartDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("LastLoginDateUtc>=?", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE));
+                }
+
+                if (pagination.getEndDate() != null) {
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,LastLoginDateUtc)<=?", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE));
+                }
+
+                List<String> listKeywords = pagination.getKeywords();
+                Disjunction disj = Restrictions.disjunction();
+                for (String k : listKeywords) {
+                    if (StringUtils.isEmpty(pagination.getSearchString())) {
+                        break;
+                    }
+                    disj.add(Restrictions.sqlRestriction("CAST(" + k + " AS VARCHAR) like '%" + pagination.getSearchString() + "%'"));
+                }
+                cr.add(disj);
+                cr.setProjection(Projections.rowCount());
+                pagination.setTotalResult(((Long) cr.uniqueResult()).intValue());
+                cr.setProjection(Projections.projectionList()
+                        .add(Projections.property("id"), "id")
+                        .add(Projections.property("lastName"), "lastName")
+                        .add(Projections.property("userName"), "userName")
+                        .add(Projections.property("pinCode"), "pinCode")
+                        .add(Projections.property("lastLoginDateUtc"), "lastLoginDateUtc"))
+                        .setResultTransformer(Transformers.aliasToBean(CustomerNonActive.class));
+                cr.setFirstResult(pagination.getFirstResult());
+                cr.setMaxResults(pagination.getDisplayPerPage());
+                cr.addOrder(pagination.isAsc() ? Order.asc(pagination.getOrderColmn()) : Order.desc(pagination.getOrderColmn()));
+                pagination.setDisplayList(cr.list());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+
+    public void setExportCustomerPinCodeFile(ExcelFile file, GratefulPagination pagination) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                List<String> listKeywords = pagination.getKeywords();
+                String query = "select c.lastName,c.userName,p.name ProvincialName,c.LastLoginDateUtc,c.pincode from Customer c "
+                        + "left join ProvincialAgencies p on c.ProvincialAgencyID=p.id "
+                        + "where c.isDelete=0 and c.isActive=1 and c.isDeposited=1 and c.isLock=0 and c.id>167345";
+                for (String k : listKeywords) {
+                    if (StringUtils.isEmpty(pagination.getSearchString())) {
+                        break;
+                    }
+                    query += " and CAST(" + k + " AS VARCHAR) like '%" + pagination.getSearchString() + "%' ";
+                }
+                if (pagination.getStartDate() != null) {
+                    query += " and cast(LastLoginDateUtc as date)>=:startDate";
+                }
+
+                if (pagination.getEndDate() != null) {
+                    query += " and cast(LastLoginDateUtc as date)<=:endDate";
+                }
+
+                if (pagination.getAgencyId() != null) {
+                    query += " and c.ProvincialAgencyID=:agencyId";
+                }
+
+                if (pagination.getHasPinCode() != null) {
+                    if (pagination.getHasPinCode()) {
+                        query += " and c.pincode is not null";
+                    } else if (!pagination.getHasPinCode()) {
+                        query += " and c.pincode is null";
+                    }
+                }
+                query += " order by c.ProvincialAgencyID,c.lastName";
+
+                Query q = session.createSQLQuery(query)
+                        .addScalar("lastName", StringType.INSTANCE)
+                        .addScalar("userName", StringType.INSTANCE)
+                        .addScalar("ProvincialName", StringType.INSTANCE)
+                        .addScalar("LastLoginDateUtc", DateType.INSTANCE)
+                        .addScalar("pincode", StringType.INSTANCE);
+                if (pagination.getStartDate() != null) {
+                    q.setParameter("startDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getStartDate()), StringType.INSTANCE);
+                }
+
+                if (pagination.getEndDate() != null) {
+                    q.setParameter("endDate", new SimpleDateFormat("yyyy-MM-dd").format(pagination.getEndDate()), StringType.INSTANCE);
+                }
+
+                if (pagination.getAgencyId() != null) {
+                    q.setParameter("agencyId", pagination.getAgencyId());
+                }
+                List<String> header = new ArrayList();
+                header.add("Họ và tên");
+                header.add("Tên đăng nhập");
+                header.add("Đại lý");
+                header.add("Ngày kích hoạt");
+                header.add("Mã PIN");
+                file.setTitles(header);
+                List rs = q.list();
+                for (Object rows : rs) {
+                    Object[] row = (Object[]) rows;
+                    row[3] = CustomFunction.formatTime((Date) row[3]);
+                    if (row[4] == null) {
+                        row[4] = "Chưa cập nhật";
+                    }
+                }
+                file.setContents(rs);
+                file.setFileName("Danh sach ma pin NPP");
+            }
+        } catch (Exception e) {
+            Logger.getLogger(Module.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+
     public void pageData(com.resources.pagination.index.CustomerPagination customerPagination, Integer parentId) {
         Session session = null;
         try {
@@ -247,8 +390,7 @@ public class CustomerFacade extends AbstractFacade {
                                 .add(Projections.property("peoplesIdentity"), "peoplesIdentity")
                                 .add(Projections.property("mobile"), "mobile")
                                 .add(Projections.property("createdOnUtc"), "createdOnUtc"))
-                        .setResultTransformer(Transformers.aliasToBean(CustomerNonActive.class
-                        ));
+                        .setResultTransformer(Transformers.aliasToBean(CustomerNonActive.class));
                 cr.setFirstResult(customerPagination.getFirstResult());
                 cr.setMaxResults(customerPagination.getDisplayPerPage());
                 cr.addOrder(customerPagination.isAsc() ? Order.asc(customerPagination.getOrderColmn()) : Order.desc(customerPagination.getOrderColmn()));
@@ -613,6 +755,29 @@ public class CustomerFacade extends AbstractFacade {
         }
     }
 
+    public void updatePincode(String ids) throws Exception {
+        Transaction trans = null;
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            trans = session.beginTransaction();
+            Query q = session.createSQLQuery("InsertPinCode :listCusId").setParameter("listCusId", ids);
+            q.executeUpdate();
+            trans.commit();
+        } catch (Exception e) {
+            try {
+                if (trans != null) {
+                    trans.rollback();
+                }
+            } catch (Exception ex) {
+                throw ex;
+            }
+            throw e;
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+
     public Integer changePassword(Integer id) throws Exception {
         Transaction trans = null;
         Session session = null;
@@ -655,7 +820,7 @@ public class CustomerFacade extends AbstractFacade {
                     || StringUtils.isEmpty(customerNonActive.getTitle())
                     || StringUtils.isEmpty(customerNonActive.getParentName())
                     || StringUtils.isEmpty(customerNonActive.getCustomerName())
-                    || StringUtils.isEmpty(customerNonActive.getBirthday())
+                    || StringUtils.isEmpty(customerNonActive.getDateOfBirth())
                     || StringUtils.isEmpty(customerNonActive.getPeoplesIdentity())) {
                 return 2;
             }
@@ -688,7 +853,7 @@ public class CustomerFacade extends AbstractFacade {
             if ((Integer) q.uniqueResult() == 0) {
                 return 9;
             }
-            q=session.createSQLQuery("Check_SameSystem :parendId,:customerid");
+            q = session.createSQLQuery("Check_SameSystem :parendId,:customerid");
             q.setParameter("parendId", distributorParent.getId());
             q.setParameter("customerid", distributorCustomer.getId());
             if ((Integer) q.uniqueResult() == 0) {
@@ -715,7 +880,8 @@ public class CustomerFacade extends AbstractFacade {
             c.setCustomerIdcrm(distributorCustomer.getCustomerIdcrm() + "," + String.valueOf(distributorCustomer.getId()));
             c.setIsActive(customerNonActive.getIsActive());
             c.setAddress(StringUtils.escapeHtmlEntity(customerNonActive.getAddress()));
-            c.setBirthday(customerNonActive.getBirthday());
+            c.setDateOfBirth(customerNonActive.getDateOfBirth());
+            c.setTaxCode(StringUtils.escapeHtmlEntity(customerNonActive.getTaxCode()));
             if (customerNonActive.getLastActivityDateUtc() != null && customerNonActive.getPeoplesIdentity() != null) {
                 c.setLastActivityDateUtc(customerNonActive.getLastActivityDateUtc());
             }
@@ -782,6 +948,7 @@ public class CustomerFacade extends AbstractFacade {
             String newBillingAddress = StringUtils.escapeHtmlEntity(cus.getBillingAddress());
             String newTaxCode = StringUtils.escapeHtmlEntity(cus.getTaxCode());
             String newAddress = StringUtils.escapeHtmlEntity(cus.getAddress());
+            String dateOfBirth = StringUtils.escapeHtmlEntity(cus.getDateOfBirth());
 
             c.setLastName(newLastName);
             c.setFirstName(newFirstName);
@@ -794,6 +961,7 @@ public class CustomerFacade extends AbstractFacade {
             c.setBillingAddress(newBillingAddress);
             c.setTaxCode(newTaxCode);
             c.setAddress(newAddress);
+            c.setDateOfBirth(dateOfBirth);
             if (roleId == 1) {
                 c.setProvincialAgencies(new ProvincialAgencies(cus.getProvinceAgencyId()));
             }
@@ -863,11 +1031,9 @@ public class CustomerFacade extends AbstractFacade {
         Customer obj = null;
         try {
             session = HibernateConfiguration.getInstance().openSession();
-            obj
-                    = (Customer) session.get(Customer.class, id);
+            obj = (Customer) session.get(Customer.class, id);
             Hibernate.initialize(obj.getCustomerByCustomerId());
             Hibernate.initialize(obj.getCustomerByParentId());
-
         } catch (Exception e) {
             Logger.getLogger(Customer.class
                     .getName()).log(Level.SEVERE, null, e);
@@ -1029,7 +1195,7 @@ public class CustomerFacade extends AbstractFacade {
                         .add(Projections.property("taxCode"), "taxCode")
                         .add(Projections.property("title"), "title")
                         .add(Projections.property("address"), "address")
-                        .add(Projections.property("birthday"), "birthday")
+                        .add(Projections.property("dateOfBirth"), "dateOfBirth")
                         .add(Projections.property("lastActivityDateUtc"), "lastActivityDateUtc")
                         .add(Projections.property("lastLoginDateUtc"), "lastLoginDateUtc")
                         .add(Projections.property("rankCustomerId.name"), "rankCustomerName")
@@ -1162,6 +1328,58 @@ public class CustomerFacade extends AbstractFacade {
             HibernateConfiguration.getInstance().closeSession(session);
         }
         return result;
+    }
+    
+    public void editCustomerByCustomer(Map map,int id) throws Exception {
+        Session session = null;
+        Transaction trans = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                trans = session.beginTransaction();
+                String address=(String) map.get("address");
+                String mobile=(String) map.get("mobile");
+                String dateOfBirth=(String) map.get("dateOfBirth");
+                Query q = session.createSQLQuery("update Customer set dateOfBirth=:dateOfBirth,address=:address,mobile=:mobile where id=:id");
+                q.setParameter("dateOfBirth", dateOfBirth);
+                q.setParameter("address", address);
+                q.setParameter("mobile", mobile);
+                q.setParameter("id", id);
+                q.executeUpdate();
+                trans.commit();
+            }
+        } catch (Exception e) {
+            if (trans != null) {
+                trans.rollback();
+            }
+            throw e;
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
+    }
+    
+    public void editTaxCodeByCustomer(Map map,int id) throws Exception {
+        Session session = null;
+        Transaction trans = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            if (session != null) {
+                trans = session.beginTransaction();
+                String taxCode=(String) map.get("taxCode");
+                Query q = session.createSQLQuery("update Customer set taxCode=:taxCode where id=:id");
+                q.setParameter("taxCode", taxCode);
+                q.setParameter("id", id);
+                q.executeUpdate();
+                trans.commit();
+            }
+        } catch (Exception e) {
+            if (trans != null) {
+                trans.rollback();
+            }
+            throw e;
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
     }
 
     @Override

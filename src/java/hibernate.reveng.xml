@@ -35,4 +35,5 @@
   <table-filter match-name="Promotion"/>
   <table-filter match-name="Action"/>
   <table-filter match-name="AdminLogs"/>
+  <table-filter match-name="SystemTrian"/>
 </hibernate-reverse-engineering>

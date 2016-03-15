@@ -28,10 +28,6 @@
         <link rel="stylesheet" href='<c:url value="/resources/css/nprogress.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/reset-css.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/message.css"/>' type="text/css">
-        <link rel="stylesheet" href='<c:url value="resources/css/owl.carousel.css"/>' type="text/css">
-        <link rel="stylesheet" href='<c:url value="resources/css/owl.theme.css"/>' type="text/css">
-        <link rel="stylesheet" href='<c:url value="resources/css/owl.transitions.css"/>' type="text/css">
-        <link rel="stylesheet" href='<c:url value="resources/css/magnific-popup.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/main_index.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/responsive_index.css"/>' type="text/css">
 
@@ -53,7 +49,7 @@
             <div id="top-nav">
                 <%@include file="includes/index/top-navigation.jsp" %>
             </div>
-            <div id="header">
+            <div id="header" style="position: relative">
                 <%@include file="includes/index/header.jsp" %>
             </div>
             <div id="sticker">
@@ -70,8 +66,8 @@
                     <div class="row">
                         <ol class="breadcrumb">
                             <li><i class="fa fa-home"></i></li>
-                            <li><a href="">Trang chủ</a></li>
-                            <li><a href="#">${INDEX_NEWS.caId.name}</a></li>
+                            <li><a href="/trang-chu">Trang chủ</a></li>
+                            <li><a href="/tin-tuc/${INDEX_NEWS.caId.id}/trang-1">${INDEX_NEWS.caId.name}</a></li>
                             <li class="active">${INDEX_NEWS.name}</li>
                         </ol>
                     </div>

@@ -18,6 +18,7 @@
                 <th class="col-md-1 text-left" column="customerName">Người giới thiệu <span class="${PAGINATION.orderColmn=='customerName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-1 text-left" column="parentName">Người chỉ định <span class="${PAGINATION.orderColmn=='parentName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="provincialAgencyName">Đại lý <span class="${PAGINATION.orderColmn=='provincialAgencyName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-2" column="rankName">Gói tham gia <span class="${PAGINATION.orderColmn=='rankName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="dateCreated">Thời gian nạp <span class="${PAGINATION.orderColmn=='dateCreated'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
             </tr>
         </thead>
@@ -30,6 +31,7 @@
                     <td class="text-left">${customerRank.customerName}</td>
                     <td class="text-left">${customerRank.parentName}</td>
                     <td>${customerRank.provincialAgencyName}</td>
+                    <td>${customerRank.rankName}</td>
                     <td>${f:formatTime(customerRank.dateCreated)}</td>
                 </tr>
             </c:forEach>

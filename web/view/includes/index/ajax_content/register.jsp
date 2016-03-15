@@ -77,7 +77,7 @@
                     <label>Ngày sinh *</label>
                 </div>
                 <div class="col-xs-10"> 
-                    <input type="text" name="birthday" class="form-control date-mask" required pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" />
+                    <input type="text" name="dateOfBirth" class="form-control date-mask" required pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" />
                 </div>
             </div>
             <div class="row">
@@ -88,6 +88,30 @@
                     <input type="text" name="peoplesIdentity" required pattern="^[\d]+$" data-original-title-pattern="Vui lòng nhập các ký tự số" class="form-control">
                 </div>
             </div> 
+            <div class="row">
+                <div class="col-xs-2">
+                    <label>Số điện thoại *</label>
+                </div>
+                <div class="col-xs-10">
+                    <input type="text" name="mobile" required pattern="^0|\+[\d]+[\d]+$" data-original-title-pattern="Định dạng số điện thoại không hợp lệ" class="form-control">
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <label>Địa chỉ *</label>
+                </div>
+                <div class="col-xs-10">
+                    <textarea class="form-control" required name="address" rows="5"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-2">
+                    <label>Mã số thuế *</label>
+                </div>
+                <div class="col-xs-10">
+                    <input type="text" name="taxCode" required class="form-control">
+                </div>
+            </div>
             <p>Thông tin bổ sung:</p> 
             <div class="row">
                 <div class="col-xs-2">
@@ -115,30 +139,6 @@
                     <p class="help-block"><i>Sử dụng để lấy lại thông tin đăng nhập.</i></p>
                 </div>
             </div> 
-            <div class="row">
-                <div class="col-xs-2">
-                    <label>Số điện thoại</label>
-                </div>
-                <div class="col-xs-10">
-                    <input type="text" name="mobile" pattern="^0|\+[\d]+[\d]+$" data-original-title-pattern="Định dạng số điện thoại không hợp lệ" class="form-control">
-                </div>
-            </div>
-            <!--            <div class="row">
-                            <div class="col-xs-2">
-                                <label>Mã số thuế</label>
-                            </div>
-                            <div class="col-xs-10">
-                                <input type="text" name="taxCode" pattern="^[\d]+$" data-original-title-pattern="Định dạng mã số thuế không hợp lệ" class="form-control">
-                            </div>
-                        </div>  -->
-            <div class="row">
-                <div class="col-xs-2">
-                    <label>Địa chỉ</label>
-                </div>
-                <div class="col-xs-10">
-                    <input type="text" class="form-control" name="address" />
-                </div>
-            </div>
             <div class="row">
                 <div class="col-xs-2">
                     <label>Loại khách hàng</label>

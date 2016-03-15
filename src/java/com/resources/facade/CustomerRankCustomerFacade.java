@@ -1,12 +1,9 @@
 package com.resources.facade;
 
-import com.resources.bean.CustomerFromTotalParent;
 import com.resources.bean.ExcelFile;
 import com.resources.bean.HistoryCustomerRank;
-import com.resources.entity.CheckAwards;
 import com.resources.entity.Customer;
 import com.resources.entity.CustomerRankCustomer;
-import com.resources.entity.HistoryAwards;
 import com.resources.entity.Module;
 import com.resources.entity.RankCustomes;
 import com.resources.pagination.admin.DefaultAdminPagination;
@@ -46,6 +43,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
             session = HibernateConfiguration.getInstance().openSession();
             if (session != null) {
                 Criteria cr = session.createCriteria(CustomerRankCustomer.class, "c");
+                cr.createAlias("c.rankCustomes", "rank", JoinType.LEFT_OUTER_JOIN);
                 cr.createAlias("c.customer", "cus", JoinType.LEFT_OUTER_JOIN);
                 cr.createAlias("cus.provincialAgencies", "pA", JoinType.LEFT_OUTER_JOIN);
                 cr.createAlias("cus.customerByParentId", "customerByParentId", JoinType.LEFT_OUTER_JOIN);
@@ -58,11 +56,11 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 }
 
                 if (historyPagination.getStartDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-MM-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
                 }
 
                 if (historyPagination.getEndDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-MM-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
                 }
 
                 List<String> listKeywords = historyPagination.getKeywords();
@@ -85,6 +83,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                         .add(Projections.property("pricePv"), "pricePv")
                         .add(Projections.property("c.dateCreated"), "dateCreated")
                         .add(Projections.property("pA.name"), "provincialAgencyName")
+                        .add(Projections.property("rank.name"), "rankName")
                         .add(Projections.property("customerByParentId.userName"), "parentName")
                         .add(Projections.property("customerByCustomerId.userName"), "customerName"))
                         .setResultTransformer(Transformers.aliasToBean(HistoryCustomerRank.class));
@@ -309,11 +308,11 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 }
 
                 if (historyPagination.getStartDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("this_.DateCreated>=?", new SimpleDateFormat("yyyy-MM-dd").format(historyPagination.getStartDate()), StringType.INSTANCE));
                 }
 
                 if (historyPagination.getEndDate() != null) {
-                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-mm-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
+                    cr.add(Restrictions.sqlRestriction("dateadd(day,-1,this_.DateCreated)<=?", new SimpleDateFormat("yyyy-MM-dd").format(historyPagination.getEndDate()), StringType.INSTANCE));
                 }
 
                 List<String> listKeywords = historyPagination.getKeywords();

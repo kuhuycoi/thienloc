@@ -1,6 +1,6 @@
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-    <img src="<c:url value="/resources/img/tinvuixuan2.png"/>" alt=""/>
+    <img src="<c:url value="/resources/img/thongbaodulekhaitruongvanphonghnoics2.png"/>" alt=""/>
 
     <%--<div style="background-color:red;padding: 20px;margin: 10px 0;text-align: justify">
         <span style="text-transform: uppercase;text-align: center;font-size: 20px;color: yellow;margin-bottom:20px;line-height:40px">Thông báo!<br>

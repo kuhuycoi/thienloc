@@ -49,11 +49,13 @@
     <mapping class="com.resources.entity.Videos"/>
     <mapping class="com.resources.entity.News"/>
     <mapping class="com.resources.entity.NewsCategories"/>
+    <mapping class="com.resources.entity.SystemTrian"/>
     <mapping class="com.resources.bean.CustomerDistributor"/>
     <mapping class="com.resources.bean.CustomerFromTotalParent"/>
     <mapping class="com.resources.bean.CustomerNonActive"/>
     <mapping class="com.resources.bean.CustomerTree"/>
     <mapping class="com.resources.bean.HistoryCustomerRank"/>
     <mapping class="com.resources.bean.HistoryAward"/>
+    <mapping class="com.resources.bean.TrianTree"/>
   </session-factory>
 </hibernate-configuration>

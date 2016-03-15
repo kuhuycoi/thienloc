@@ -2,6 +2,7 @@ package com.resources.facade;
 
 import com.resources.entity.News;
 import com.resources.pagination.admin.DefaultAdminPagination;
+import com.resources.pagination.index.NewsPagination;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -123,6 +124,32 @@ public class NewsFacade extends AbstractFacade {
             HibernateConfiguration.getInstance().closeSession(session);
         }
         return list;
+    }
+    public void getListPost(NewsPagination pagination) {
+        Session session = null;
+        try {
+            session = HibernateConfiguration.getInstance().openSession();
+            Criteria cr = session.createCriteria(News.class);
+            cr.add(Restrictions.eq("caId.id", pagination.getNewsCategory()));
+            cr.add(Restrictions.eq("isDelete", false));
+            cr.add(Restrictions.eq("isShow", true));
+            cr.setProjection(Projections.rowCount());
+            pagination.setTotalResult(((Long) cr.uniqueResult()).intValue());
+                
+            cr = session.createCriteria(News.class);
+            cr.add(Restrictions.eq("caId.id", pagination.getNewsCategory()));
+            cr.add(Restrictions.eq("isDelete", false));
+            cr.add(Restrictions.eq("isShow", true));
+            cr.setFirstResult(pagination.getFirstResult());
+            cr.setMaxResults(pagination.getDisplayPerPage());
+            cr.addOrder(Order.asc("orderNumber"));
+            cr.addOrder(Order.desc("createdDate"));
+            pagination.setDisplayList(cr.list());
+        } catch (Exception e) {
+            Logger.getLogger(News.class.getName()).log(Level.SEVERE, null, e);
+        } finally {
+            HibernateConfiguration.getInstance().closeSession(session);
+        }
     }
 
     public News findByName(Integer caId,String name) {

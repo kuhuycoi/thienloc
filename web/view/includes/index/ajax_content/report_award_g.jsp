@@ -3,6 +3,7 @@
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@taglib prefix="f" uri="/WEB-INF/tlds/functions.tld" %>
 <c:set var="RANKNOW" value="${f:findRankNowByCustomerID(PAGINATION.selectedId)}" />
+
 <table class="table table-hover table-bordered table-valign-midle table-grid-view table-align-center">
     <thead>
         <tr>
@@ -29,7 +30,7 @@
         </tr>
     </tbody>
 </table><!-- end table -->
-
+<%--
 <div class="buttonBar"></div>
 <p>Danh sách 1000 thành viên mới nhất trong 1 tuần</p>
 <table class="table table-bordered table-condensed">
@@ -54,3 +55,4 @@
         </td>
     </tr>
 </table>
+--%>

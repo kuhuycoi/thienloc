@@ -16,7 +16,7 @@ public class CaptchaUtil {
 
     public static String generateCaptchaTextMethod2(int captchaLength) {
 
-        String saltChars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+        String saltChars = "abcdefghijklmnopqrstuvwxyz1234567890";
         StringBuffer captchaStrBuffer = new StringBuffer();
         java.util.Random rnd = new java.util.Random();
 

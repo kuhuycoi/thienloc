@@ -7,8 +7,19 @@ import org.hibernate.cfg.Configuration;
 public class HibernateConfiguration {
 
     private static final HibernateConfiguration INSTANCE = new HibernateConfiguration();
+    private static SessionFactory sessionFactory;
 
-    private static SessionFactory sessionFactory = HibernateConfiguration.INSTANCE.buildSessionFactory();
+    static {
+        Configuration configuration;
+
+        try {
+            configuration = new Configuration().configure("/hibernate.cfg.xml");
+            sessionFactory = configuration.buildSessionFactory();
+        } catch (Throwable ex) {
+            System.err.println("Failed to create sessionFactory object." + ex);
+            ex.printStackTrace();
+        }
+    }
 
     private HibernateConfiguration() {
     }
@@ -17,27 +28,15 @@ public class HibernateConfiguration {
         return INSTANCE;
     }
 
-    private SessionFactory buildSessionFactory() {
-        try {
-            if (sessionFactory == null) {
-                Configuration configuration = new Configuration().configure();
-                sessionFactory = configuration.buildSessionFactory();
-            }
-        } catch (Throwable ex) {
-            System.err.println("Failed to create sessionFactory object." + ex);
-            ex.printStackTrace();
-        }
-        return sessionFactory;
-    }
-
     public SessionFactory getSessionFactory() {
         return sessionFactory;
     }
 
     public Session openSession() {
-        if (sessionFactory.isClosed() || sessionFactory == null) {
-            sessionFactory = HibernateConfiguration.INSTANCE.buildSessionFactory();
-        }
+        return sessionFactory.openSession();
+    }
+
+    public Session openSession(SessionFactory sessionFactory) {
         return sessionFactory.openSession();
     }
 

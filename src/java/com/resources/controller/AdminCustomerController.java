@@ -17,6 +17,8 @@ import com.resources.pagination.admin.ProvincialAgencyPagination;
 import com.resources.utils.LeoConstants;
 import com.resources.utils.LogUtils;
 import com.resources.utils.StringUtils;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.http.HttpSession;
@@ -560,6 +562,19 @@ public class AdminCustomerController {
         ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
         MessagePagination mP;
         int result;
+        Calendar dateOfBirth = Calendar.getInstance();
+        try {
+            dateOfBirth.setTime(new SimpleDateFormat("dd/MM/yyyy").parse(customerNonActive.getDateOfBirth()));
+            if (dateOfBirth.get(Calendar.YEAR) >= 1997) {
+                mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đăng ký không thành công. Bạn chưa đủ tuổi tham gia hệ thống này!");
+                mm.put("MESSAGE_PAGINATION", mP);
+                return mAV;
+            }
+        } catch (Exception e) {
+            mP = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Định dạng ngày tháng không hợp lệ. Định dạng yêu cầu: dd/mm/yyyy. VD: 01/01/1990!");
+            mm.put("MESSAGE_PAGINATION", mP);
+            return mAV;
+        }
         try {
             result = new CustomerFacade().edit(customerNonActive, (Integer) session.getAttribute("ADMIN_ID"));
         } catch (Exception ex) {

@@ -29,3 +29,6 @@
         </c:if>
     </div>
 </div>
+<div style="position:absolute;right:0;top:0;z-index:99;height:100%">
+	<img src="<c:url value='/resources/img/baothanhtra.jpg'/>" alt="Thanh tra" />
+</div>

@@ -68,7 +68,7 @@ public abstract class AbstractFacade<T> implements Serializable {
             } catch (Exception ex) {
                 throw ex;
             }
-            Logger.getLogger(entityClass.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
             throw new Exception(e);
         } finally {
             HibernateConfiguration.getInstance().closeSession(session);

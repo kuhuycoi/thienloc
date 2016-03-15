@@ -31,13 +31,17 @@
         <link rel="stylesheet" href='<c:url value="/resources/css/message.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/main_index.css"/>' type="text/css">
         <link rel="stylesheet" href='<c:url value="/resources/css/responsive_index.css"/>' type="text/css">
+        <!-- for old browser -->
+        <script src='<c:url value="/resources/js/vendor/modernizr-2.6.2.min.js"/>'></script>
+        <!-- main jQuery -->
+        <script src='<c:url value="/resources/js/vendor/jquery-1.11.1.min.js"/>'></script>
     </head>
     <body>
         <div id="container">
             <div id="top-nav">
                 <%@include file="includes/index/top-navigation.jsp" %>
             </div>
-            <div id="header">
+            <div id="header" style="position: relative">
                 <%@include file="includes/index/header.jsp" %>
             </div>
             <div id="sticker">
@@ -66,10 +70,6 @@
                 </div>
             </div>
         </div>
-        <!-- for old browser -->
-        <script src='<c:url value="/resources/js/vendor/modernizr-2.6.2.min.js"/>'></script>
-        <!-- main jQuery -->
-        <script src='<c:url value="/resources/js/vendor/jquery-1.11.1.min.js"/>'></script>
         <!-- Bootstrap -->
         <script src='<c:url value="/resources/js/bootstrap.min.js"/>'></script>
         <!-- Bootbox -->

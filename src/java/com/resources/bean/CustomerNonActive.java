@@ -19,7 +19,7 @@ public class CustomerNonActive implements Serializable {
     private String customerName;
     private String peoplesIdentity;
     private Date createdOnUtc;
-    private String birthday;
+    private String dateOfBirth;
     private String mobile;
     private String address;
     private Integer customerTypeId;
@@ -37,6 +37,7 @@ public class CustomerNonActive implements Serializable {
     private String lastActivityDateUtc;
     private Date lastLoginDateUtc;
     private String rankCustomerName;
+    private String pinCode;
     
     
     public CustomerNonActive() {
@@ -238,12 +239,12 @@ public class CustomerNonActive implements Serializable {
         this.lastActivityDateUtc = lastActivityDateUtc;
     }
 
-    public String getBirthday() {
-        return birthday;
+    public String getDateOfBirth() {
+        return dateOfBirth;
     }
 
-    public void setBirthday(String birthday) {
-        this.birthday = birthday;
+    public void setDateOfBirth(String dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public Date getLastLoginDateUtc() {
@@ -268,5 +269,13 @@ public class CustomerNonActive implements Serializable {
 
     public void setIsDeposited(Boolean isDeposited) {
         this.isDeposited = isDeposited;
+    }
+
+    public String getPinCode() {
+        return pinCode;
+    }
+
+    public void setPinCode(String pinCode) {
+        this.pinCode = pinCode;
     }
 }

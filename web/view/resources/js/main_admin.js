@@ -149,8 +149,6 @@ $(document).ready(function () {
         e.stopPropagation();
         $($(this).attr('data-target')).val('');
     });
-
-    $('.datepicker').datepicker();
     /* ========================================================================= */
     /*  Change Content
      /* ========================================================================= */
@@ -1067,3 +1065,5 @@ function confirmDialog(title, message, function1, function2) {
             }]
     });
 }
+
+$('.datepicker').datepicker();

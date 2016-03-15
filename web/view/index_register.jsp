@@ -37,7 +37,7 @@
             <div id="top-nav">
                 <%@include file="includes/index/top-navigation.jsp" %>
             </div>
-            <div id="header">
+            <div id="header" style="position: relative">
                 <%@include file="includes/index/header.jsp" %>
             </div>
             <div id="sticker">

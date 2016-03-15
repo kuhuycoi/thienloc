@@ -49,7 +49,7 @@
             <div id="top-nav">
                 <%@include file="includes/index/top-navigation.jsp" %>
             </div>
-            <div id="header">
+            <div id="header" style="position: relative">
                 <%@include file="includes/index/header.jsp" %>
             </div>
             <div id="sticker">
@@ -108,6 +108,7 @@
         <script src='<c:url value="/resources/js/go.js"/>'></script>
         <!-- format number -->
         <script src='<c:url value="/resources/js/jquery.number.min.js"/>'></script>
+        <script src='<c:url value="/resources/js/jquery.countdown.min.js"/>' type="text/javascript"></script>
         <!-- theme custom scripts -->
         <script src='<c:url value="/resources/js/main_index.js"/>'></script>
     </body>

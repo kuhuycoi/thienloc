@@ -36,5 +36,5 @@
     </div>
 </c:if>
 <div class="footer-bottom text-center">
-    <span>© 2015. Bản quyền thuộc về <a href="http://tk.thienlocgroup.com" class="external">Thiên Lộc Group</a>. Designed By LeoTeams</span>
+    <span>© 2015. Bản quyền thuộc về <a href="http://tk.thienlocgroup.com" class="external">Thiên Lộc Group</a></span>
 </div>

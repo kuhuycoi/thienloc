@@ -81,7 +81,7 @@
                         <div class="form-group form-group-sm">
                             <label class="control-label">Ngày kết thúc: </label>                            
                             <div class="input-group datepicker">
-                                <input type="text" name="startDate" readonly="" class="form-control change-time" controller='<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.CHANGE_DAY}/1/"/>' />
+                                <input type="text" name="endDate" readonly="" class="form-control change-time" controller='<c:url value="${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.CHANGE_DAY}/1/"/>' />
                                 <span class="input-group-addon"><i class="glyphicon glyphicon-th"></i></span>
                             </div>
                         </div>

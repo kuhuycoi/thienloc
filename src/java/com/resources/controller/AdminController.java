@@ -51,25 +51,37 @@ public class AdminController {
 
     @RequestMapping(value = "/Login", method = RequestMethod.POST)
     @ResponseBody
-    public ModelAndView login(@RequestBody Admin admin, ModelMap mm, HttpServletRequest request) {
+    public ModelAndView login(@RequestBody Map map, ModelMap mm, HttpServletRequest request) {
         ModelAndView mAV = new ModelAndView(DefaultAdminPagination.MESSAGE_FOLDER + MessagePagination.MESSAGE_VIEW);
-        MessagePagination messagePagination;
-        if (StringUtils.isEmpty(admin.getUserName()) || StringUtils.isEmpty(admin.getPassword())) {
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tên đăng nhập và mật khẩu!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
+        MessagePagination mp;
+        Admin admin=new Admin();
+        admin.setUserName(String.valueOf(map.get("userName")));
+        admin.setPassword(String.valueOf(map.get("password")));
+        String checkCaptcha = String.valueOf(map.get("captcha"));
+        if (StringUtils.isEmpty(admin.getUserName()) || StringUtils.isEmpty(admin.getPassword())||StringUtils.isEmpty(checkCaptcha)) {
+            mp = new MessagePagination(MessagePagination.MESSAGE_TYPE_WARNING, "Chú ý", "Vui lòng điền tất cả các ô!");
+            mm.put("MESSAGE_PAGINATION", mp);
+            return mAV;
+        }
+        Map captchaList = (Map) request.getSession().getAttribute("CAPTCHA");
+        String triAnCaptcha = (String) captchaList.get("ADMIN_LOGIN");
+        checkCaptcha=checkCaptcha.toLowerCase();
+        if (checkCaptcha == null || !CustomFunction.md5(checkCaptcha).equals(triAnCaptcha)) {
+            mp = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Mã captcha không hợp lệ!");
+            mm.put("MESSAGE_PAGINATION", mp);
             return mAV;
         }
         admin.setPassword(CustomFunction.md5(admin.getPassword()));
         try {
             admin = new AdminFacade().login(admin);
             if (admin == null || admin.getIsDelete()) {
-                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Sai tên đăng nhập hoặc mật khẩu!");
-                mm.put("MESSAGE_PAGINATION", messagePagination);
+                mp = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Sai tên đăng nhập hoặc mật khẩu!");
+                mm.put("MESSAGE_PAGINATION", mp);
                 return mAV;
             }
             if (!admin.getIsActive()) {
-                messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn đã bị khóa!");
-                mm.put("MESSAGE_PAGINATION", messagePagination);
+                mp = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Cảnh bảo", "Tài khoản của bạn đã bị khóa!");
+                mm.put("MESSAGE_PAGINATION", mp);
                 return mAV;
             }
             request.getSession().setAttribute("ADMIN_ID", admin.getId());
@@ -77,8 +89,8 @@ public class AdminController {
             mAV = new ModelAndView(DefaultAdminPagination.REDIRECT_FOLDER + DefaultAdminPagination.REDIRECT_VIEW);
             return mAV;
         } catch (Exception e) {
-            messagePagination = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
-            mm.put("MESSAGE_PAGINATION", messagePagination);
+            mp = new MessagePagination(MessagePagination.MESSAGE_TYPE_ERROR, "Lỗi", "Đã xảy ra lỗi! Thử lại sau!");
+            mm.put("MESSAGE_PAGINATION", mp);
             return mAV;
         }
     }

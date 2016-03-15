@@ -34,21 +34,21 @@
                         </div>
                     </c:if>
                     <div class="form-group">
+                        <label for="dateOfBirth" class="control-label col-sm-3">Ngày sinh</label>
+                        <div class="col-sm-9">
+                            <input type="text" id="dateOfBirth" name="dateOfBirth" pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" value="${CUSTOMER.dateOfBirth}" class="form-control date-mask" placeholder="Định dạng yêu cầu: dd/mm/yyyy. VD: 01/12/1990">
+                        </div>
+                    </div>
+                    <div class="form-group">
                         <label for="peoplesIdentity" class="control-label col-sm-3">Số CMND</label>
                         <div class="col-sm-9">
                             <input type="text" id="peoplesIdentity" name="peoplesIdentity" value="${CUSTOMER.peoplesIdentity}" class="form-control" placeholder="">
                         </div>
                     </div>
                     <div class="form-group">
-                        <label for="lastActivityDateUtc" class="control-label col-sm-3">Ngày sinh</label>
+                        <label for="lastActivityDateUtc" class="control-label col-sm-3">Ngày cấp CMND</label>
                         <div class="col-sm-9">
-                            <input type="text" id="lastActivityDateUtc" name="lastActivityDateUtc" pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" value="${CUSTOMER.lastActivityDateUtc}" class="form-control date-mask" placeholder="Định dạng yêu cầu: dd/mm/yyyy. VD: 01/12/2015">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="birthday" class="control-label col-sm-3">Ngày cấp CMND</label>
-                        <div class="col-sm-9">
-                            <input type="text" id="birthday" required name="birthday" pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" value="${CUSTOMER.lastActivityDateUtc}" class="form-control date-mask" placeholder="Định dạng yêu cầu: dd/mm/yyyy. VD: 01/12/1990">
+                            <input type="text" id="lastActivityDateUtc" name="lastActivityDateUtc" pattern="^(?:(?:31(\/|-|\.)(?:0?[13578]|1[02]))\1|(?:(?:29|30)(\/|-|\.)(?:0?[1,3-9]|1[0-2])\2))(?:(?:1[6-9]|[2-9]\d)?\d{2})$|^(?:29(\/|-|\.)0?2\3(?:(?:(?:1[6-9]|[2-9]\d)?(?:0[48]|[2468][048]|[13579][26])|(?:(?:16|[2468][048]|[3579][26])00))))$|^(?:0?[1-9]|1\d|2[0-8])(\/|-|\.)(?:(?:0?[1-9])|(?:1[0-2]))\4(?:(?:1[6-9]|[2-9]\d)?\d{2})$" data-original-title-pattern="Định dạng ngày tháng không hợp lệ dd/mm/yyyy" value="${CUSTOMER.lastActivityDateUtc}" class="form-control date-mask" placeholder="Định dạng yêu cầu: dd/mm/yyyy. VD: 01/12/1990  ">
                         </div>
                     </div>
                     <div class="form-group">
