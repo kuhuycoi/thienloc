@@ -14,7 +14,8 @@
             <tr controller="<c:url value='${PAGINATION.ROOT_CONTROLLER}${PAGINATION.childrenController}${PAGINATION.grandController}${PAGINATION.ORDER_DATA}/'/>">
                 <th class="th-id" column="id">ID <span class="${PAGINATION.orderColmn=='id'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2 text-left" column="lastName">Tên NPP <span class="${PAGINATION.orderColmn=='lastName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
-                <th class="col-md-2 text-left" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-1 text-left" column="userName">Username NPP <span class="${PAGINATION.orderColmn=='userName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
+                <th class="col-md-1 text-left" column="peoplesIdentity">Số CMT <span class="${PAGINATION.orderColmn=='peoplesIdentity'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-1 text-left" column="customerName">Người giới thiệu <span class="${PAGINATION.orderColmn=='customerName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-1 text-left" column="parentName">Người chỉ định <span class="${PAGINATION.orderColmn=='parentName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
                 <th class="col-md-2" column="provincialAgencyName">Đại lý <span class="${PAGINATION.orderColmn=='provincialAgencyName'?(PAGINATION.asc?'fa fa-caret-up':'fa fa-caret-down'):''}"></span></th>
@@ -28,6 +29,7 @@
                     <td class="td-align-center">${customerRank.id}</td>
                     <td class="text-left">${customerRank.firstName} ${customerRank.lastName}</td>
                     <td class="text-left bold-blue">${customerRank.userName}</td>
+                    <td class="text-left bold-blue">${customerRank.peoplesIdentity}</td>
                     <td class="text-left">${customerRank.customerName}</td>
                     <td class="text-left">${customerRank.parentName}</td>
                     <td>${customerRank.provincialAgencyName}</td>

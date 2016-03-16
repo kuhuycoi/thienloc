@@ -11,6 +11,7 @@ public class HistoryCustomerRank implements Serializable{
     @Id
     private int id;
     private String userName;
+    private String peoplesIdentity;
     private String firstName;
     private String lastName;
     private String rankName;
@@ -20,6 +21,14 @@ public class HistoryCustomerRank implements Serializable{
     private String provincialAgencyName;
     private String parentName;
     private String customerName;
+
+    public String getPeoplesIdentity() {
+        return peoplesIdentity;
+    }
+
+    public void setPeoplesIdentity(String peoplesIdentity) {
+        this.peoplesIdentity = peoplesIdentity;
+    }
 
     public String getParentName() {
         return parentName;

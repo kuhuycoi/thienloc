@@ -78,6 +78,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 cr.setProjection(Projections.projectionList()
                         .add(Projections.property("id"), "id")
                         .add(Projections.property("cus.userName"), "userName")
+                        .add(Projections.property("cus.peoplesIdentity"), "peoplesIdentity")
                         .add(Projections.property("cus.lastName"), "lastName")
                         .add(Projections.property("cus.firstName"), "firstName")
                         .add(Projections.property("pricePv"), "pricePv")
@@ -331,6 +332,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                         .add(Projections.property("id"), "id")
                         .add(Projections.property("cus.lastName"), "lastName")
                         .add(Projections.property("cus.userName"), "userName")
+                        .add(Projections.property("cus.peoplesIdentity"), "peoplesIdentity")
                         .add(Projections.property("customerByCustomerId.userName"), "customerName")
                         .add(Projections.property("customerByParentId.userName"), "parentName")
                         .add(Projections.property("pA.name"), "provincialAgencyName")
@@ -341,6 +343,7 @@ public class CustomerRankCustomerFacade extends AbstractFacade {
                 header.add("ID");
                 header.add("Họ và tên");
                 header.add("Tên đăng nhập");
+                header.add("Số CMT");
                 header.add("Người giới thiệu");
                 header.add("Người chỉ định");
                 header.add("Đại lý");
